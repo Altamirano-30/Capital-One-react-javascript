@@ -34,3 +34,139 @@
 
 
 }
+
+
+/* Layout principal */
+.dash {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+/* Sidebar estilo Figma */
+.sidebar {
+  background: var(--color-azul-brand);
+  color: #eaf0f6;
+  border-radius: 8px;
+  padding: var(--space-5) var(--space-4);
+  min-height: calc(100vh - 2 * var(--space-4));
+  position: sticky; top: var(--space-4);
+  box-shadow: var(--shadow);
+}
+.sidebar__profile { display:grid; gap:10px; margin-bottom: var(--space-4); }
+.avatar { width:48px; height:48px; border-radius:50%; background: #cfe0ff; }
+.sidebar__nav { display:grid; gap:10px; }
+.nav__item {
+  display:flex; align-items:center; gap:10px;
+  color:#dbe4ee; border:1px solid rgba(255,255,255,.18);
+  border-radius:8px; padding:10px 12px;
+}
+.nav__item--active { background: rgba(255,255,255,.08); }
+
+/* Grid de filas del tablero: 2 tarjetas anchas + panel derecho */
+.dash__row {
+  display:grid; gap: var(--space-4);
+  grid-template-columns: 1fr 1fr 360px;
+  margin-bottom: var(--space-4);
+}
+
+/* Tarjeta base blanca con borde fino */
+.card {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  padding: var(--space-4);
+  box-shadow: var(--shadow);
+}
+
+/* Alturas aproximadas como en el Figma */
+.h-180 { min-height: 180px; }
+.h-260 { min-height: 260px; }
+.h-420 { min-height: 420px; }
+.col-span-2 { grid-column: span 2; }
+
+@media (max-width: 1200px){
+  .dash { grid-template-columns: 1fr; }
+  .sidebar { position: static; min-height: auto; }
+  .dash__row { grid-template-columns: 1fr; }
+}
+
+/* Tipos y utilidades */
+.muted { color: var(--color-texto-suave); font-size: 14px; }
+
+/* Tarjetas de métricas */
+.stat { }
+.stat__head { display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-3); }
+.stat__title { font-weight: 700; }
+.stat__amount { font-size: clamp(28px, 3.5vw, 44px); font-weight: 800; margin-bottom: var(--space-3); }
+.stat__foot { display:flex; align-items:center; gap:12px; }
+.divider { width:1px; height:14px; background: var(--color-borde); display:inline-block; }
+
+/* Badge verde */
+.badge{
+  font-size:12px; font-weight:700;
+  padding: 4px 10px; border-radius: 999px;
+  border:1px solid var(--color-borde);
+  background:#eaf9ef; color: var(--color-positivo);
+}
+.badge--up { border-color: #bfe9c9; }
+
+/* Panel de transacciones */
+.trans__head { display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-3); }
+.trans__tabs { margin-bottom: var(--space-3); }
+.trans__list { display:grid; gap: 10px; }
+.trans__item {
+  display:flex; align-items:center; justify-content:space-between;
+  background: #f3f6fb;
+  border: 1px solid var(--color-borde);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.trans__left { display:flex; align-items:center; gap:12px; }
+.trans__icon {
+  width:36px; height:36px; border-radius: 10px;
+  display:grid; place-items:center;
+  background: #113F63; color:#0f172a; font-weight:700;
+}
+.trans__name { font-weight:700; }
+.trans__amount { font-weight:800; color:#374151; }
+.trans__amount.pos { color: var(--color-positivo); }
+
+/* versión compacta de cards */
+.card.compact {
+  padding: var(--space-2) var(--space-3);
+  min-height: 180px; /* 🔥 menor altura */
+}
+.stat.compact .stat__amount { font-size: clamp(22px, 2.5vw, 34px); }
+.stat.compact .stat__head { margin-bottom: var(--space-2); }
+.stat.compact .stat__foot { gap: 8px; }
+
+.dash__gridTop{
+  display:grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr 1fr 360px; /* 2 cols grandes + panel derecho */
+  grid-template-rows: 200px auto;      /* 2 filas */
+  grid-auto-flow: dense;
+  margin-bottom: var(--space-4);
+}
+
+/* utilidades de colocación */
+.span-2row { grid-row: 1 / span 2; }   /* ocupa filas 1 y 2 */
+.col-3     { grid-column: 3; }         /* fija en la 3a columna (derecha) */
+.span-2col { grid-column: 1 / span 2; }/* ocupa columnas 1 y 2 */
+
+
+.stat.compact .stat__amount {
+  font-size: clamp(20px, 2vw, 30px); /* 🔥 texto más pequeño */
+  margin-bottom: var(--space-2);
+}
+
+.stat.compact .stat__head {
+  margin-bottom: var(--space-2);
+}
+
+.stat.compact .stat__foot {
+  gap: 6px;
+  font-size: 13px;
+}
