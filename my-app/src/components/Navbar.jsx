@@ -57,7 +57,7 @@ export default function Navbar() {
       <div
         style={{
           height: "6px",
-          backgroundColor: "#004481",
+          backgroundColor: "#113F63",
         }}
       ></div>
     </>
