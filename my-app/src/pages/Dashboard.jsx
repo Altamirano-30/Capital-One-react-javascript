@@ -2,6 +2,8 @@ import Sidebar from "../components/Sidebar";
 import StatCard from "../components/StatCard";
 import TransactionsPanel from "../components/TransactionsPanel";
 import StatisticsCard from "../components/StatisticsCard";
+import GoalsCard from "../components/GoalsCard";
+import GoalIcon from "../assets/goal-sign.svg";
 
 export default function Dashboard() {
   return (
@@ -42,7 +44,15 @@ export default function Dashboard() {
 
         {/* FILA INFERIOR */}
         <section className="dash__bottom">
-          <div className="card h-180">Goals</div>
+            <GoalsCard
+                title="Goals"
+                goalName="Summer Vacation"
+                current={1485}
+                total={2400}
+                icon={GoalIcon}
+                onPrev={() => {}}
+                onNext={() => {}}
+            />
           <div className="card h-180">Spending Overview</div>
           <div className="card h-180">Quick Transfer</div>
         </section>
