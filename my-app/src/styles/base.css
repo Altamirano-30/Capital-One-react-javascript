@@ -170,3 +170,42 @@
   gap: 6px;
   font-size: 13px;
 }
+
+
+/* Contenedor top: 2 columnas (izquierda + derecha) */
+.dash__top{
+  display: grid;
+  grid-template-columns: 1fr 360px; /* ajusta 360px si quieres más/menos ancho a la derecha */
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+/* Grid interno de la columna izquierda */
+.dash__left{
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Fila de estadísticas: 2 tarjetas lado a lado, independientes de Transactions */
+.statsRow{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* Fila inferior de 3 tarjetas */
+.dash__bottom{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-4);
+}
+
+/* Responsive */
+@media (max-width: 1200px){
+  .dash__top{
+    grid-template-columns: 1fr;  /* Transactions baja debajo en pantallas chicas */
+  }
+  .dash__bottom{
+    grid-template-columns: 1fr;
+  }
+}

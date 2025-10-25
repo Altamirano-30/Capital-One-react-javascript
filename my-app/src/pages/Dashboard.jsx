@@ -8,41 +8,41 @@ export default function Dashboard() {
       <Sidebar />
 
       <div className="dash__content">
-
-        {/* GRID SUPERIOR (2 filas) */}
-        <section className="dash__gridTop">
-          {/* fila 1, col 1-2: stat cards compactas */}
-          <StatCard
-            className="compact"
-            title="Total Balance"
-            amount="USD 10,000.00"
-            delta="2.36 %"
-            subtitleLeft="▲ Income USD 30,000"
-            subtitleRight="▼ Expenses USD 20,000"
-            />
-
-            <StatCard
-            className="compact"
-            title="Total Savings"
-            amount="USD 5,000.00"
-            delta="2.36 %"
-            />
-
-
-          {/* col 3: Transactions ocupa 2 filas */}
-          <TransactionsPanel className="span-span-2row col-3" />
-
-          {/* fila 2, col 1-2: Statistics a lo ancho */}
-          <div className="card h-260 span-2col">Statistics</div>
-        </section>
-
-        {/* FILA INFERIOR (Goals / Spending / Quick Transfer) */}
-        <section className="dash__row">
-          <div className="card h-180">Goals</div>
-          <div className="card h-180">Spending Overview</div>
-          <div className="card h-180">Quick Transfer</div>
-        </section>
+  {/* TOP: 2 columnas — izquierda (grid propio) + derecha (Transactions) */}
+  <section className="dash__top">
+    {/* IZQUIERDA: su propio grid */}
+    <div className="dash__left">
+      <div className="statsRow">
+        <StatCard
+          className="compact"
+          title="Total Balance"
+          amount="USD 10,000.00"
+          delta="2.36 %"
+          subtitleLeft="▲ Income USD 30,000"
+          subtitleRight="▼ Expenses USD 20,000"
+        />
+        <StatCard
+          className="compact"
+          title="Total Savings"
+          amount="USD 5,000.00"
+          delta="2.36 %"
+        />
       </div>
+
+      <div className="card h-260">Statistics</div>
+    </div>
+
+    {/* DERECHA: Transactions aislado en su propia columna */}
+    <TransactionsPanel />
+  </section>
+
+  {/* FILA INFERIOR */}
+  <section className="dash__bottom">
+    <div className="card h-180">Goals</div>
+    <div className="card h-180">Spending Overview</div>
+    <div className="card h-180">Quick Transfer</div>
+  </section>
+</div>
     </div>
   );
 }
