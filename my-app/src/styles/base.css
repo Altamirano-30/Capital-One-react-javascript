@@ -930,3 +930,122 @@ padding-top: 30px;
 }
 .prodTile--dark .prodTile__cta,
 .prodTile__cta.is-dark{ background:#1f3650; color:#fff; border-color:#1f3650; }
+
+
+/* ====== TIPOGRAFÍA GLOBAL (ligero boost) ====== */
+:root{
+  /* escala base del cuerpo */
+  --size-body: 17px;                 /* antes 16px */
+}
+
+/* h1/h2 más grandes pero fluidos */
+.acc__header h1{
+  font-size: clamp(28px, 2.8vw, 40px);  /* ↑ título principal */
+  line-height: 1.15;
+}
+.acc__total{
+  font-size: clamp(22px, 2.2vw, 32px);  /* ↑ monto total */
+}
+.acc__totalLabel{
+  font-size: 15px;
+}
+.acc__ytd{
+  font-size: 14px;
+}
+
+/* ====== CONTENEDOR ====== */
+.dash__content{
+  /* usa todo el ancho disponible sin crear scroll */
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Secciones con más respiro */
+.accounts{
+  display: grid;
+  gap: 28px;                          /* ↑ separación entre bloques */
+}
+
+/* ====== GRID DE CUENTAS (ocupa mejor el espacio) ====== */
+/* Auto-fit: añade/quita columnas según ancho disponible.
+   Ajusta el minmax si las quieres más anchas o más compactas. */
+.acc__grid{
+    padding-top: 30px;
+  display: grid;
+  gap: 24px;                          /* ↑ separación entre cards */
+  grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+  padding-bottom: 30px;
+}
+
+/* ====== CARD DE CUENTA ====== */
+.accCard{
+  padding: 18px 20px;                 /* un pelín más de padding */
+  border-radius: 14px;
+}
+.accCard__name{
+  font-size: clamp(16px, 1.15vw, 18px);
+  line-height: 1.25;
+}
+.accCard__balance{
+  font-size: clamp(22px, 2vw, 28px);  /* ↑ monto por cuenta */
+  margin-top: 4px;
+}
+.accCard__mask{
+  font-size: 13px;
+}
+.accCard__actions{
+  gap: 10px;
+  margin-top: 12px;
+}
+.accBtn{
+  padding: 9px 12px;                  /* botones un poco más grandes */
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* ====== SAVINGS GOAL (fila grande) ====== */
+.acc__row{
+  display: grid;
+}
+.goalMini{
+  padding: 18px 20px;
+  border-radius: 14px;
+}
+.goalMini__grid{
+  gap: 24px;                          /* ↑ separación interna */
+  grid-template-columns: 1.5fr 1fr 0.9fr; /* más ancho para la barra de progreso */
+}
+.goalMini__name{
+  font-size: 16px;
+}
+.goalMini__pct strong{
+  font-size: 18px;                    /* % más visible */
+}
+.goalMini__bar{ height: 12px; }
+.goalMini__subline{ font-size: 13px; }
+
+/* ====== PRODUCTOS ADICIONALES ====== */
+.acc__products{
+    padding-top: 30px;
+  display: grid;
+  gap: 24px;                          /* ↑ separación entre tiles */
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); /* ocupan mejor el ancho */
+}
+.prodTile{
+  padding: 18px 20px;
+  border-radius: 14px;
+}
+.prodTile__title{ font-size: 16px; }
+.prodTile__text{ font-size: 14px; }
+
+/* ====== AJUSTES GENERALES ====== */
+/* separa más las tarjetas del borde del viewport si lo deseas */
+.dash{
+  gap: 24px;                           /* coherente con el resto */
+  /* Puedes bajar el padding lateral si quieres aún más ancho útil:
+     padding-left: 16px; padding-right: 16px; */
+}
+
+/* Por si algún elemento desborda, garantizamos que no salga scroll X */
+html, body{ overflow-x: hidden; }
