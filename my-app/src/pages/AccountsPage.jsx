@@ -1,3 +1,5 @@
+import Sidebar from "../components/Sidebar";              // ⬅️ AÑADIDO
+
 import AccountCard from "../components/AccountCard";
 import SavingGoalMini from "../components/SavingGoalMini";
 import ProductTile from "../components/ProductTile";
@@ -74,35 +76,42 @@ export default function AccountsPage() {
   ];
 
   return (
-    <div className="accounts">
-      {/* Header */}
-      <header className="acc__header">
-        <h1> {summary.title} </h1>
-        <div className="acc__totalWrap">
-          <div className="acc__totalLabel">Total in Accounts (USD)</div>
-          <div className="acc__total">${summary.totalUSD.toLocaleString()}</div>
-          <div className="acc__ytd">{summary.ytdLabel}</div>
-        </div>
-      </header>
+    <div className="dash">{/* ⬅️ contenedor de 2 columnas */}
+      <Sidebar />                 {/* ⬅️ Sidebar a la izquierda */}
 
-      {/* Accounts grid */}
-      <section className="acc__grid">
-        {accounts.map((a, i) => (
-          <AccountCard key={i} {...a} />
-        ))}
-      </section>
+      <div className="dash__content">{/* ⬅️ contenido a la derecha */}
+        {/* Header */}
+        <header className="acc__header">
+          <h1>{summary.title}</h1>
+          <div className="acc__totalWrap">
+            <div className="acc__totalLabel">Total in Accounts (USD)</div>
+            <div className="acc__total">
+              ${summary.totalUSD.toLocaleString()}
+            </div>
+            <div className="acc__ytd">{summary.ytdLabel}</div>
+          </div>
+        </header>
 
-      {/* Savings goals row */}
-      <section className="acc__row">
-        <SavingGoalMini {...goal} />
-      </section>
+        {/* Accounts grid */}
+        <section className="acc__grid">
+          {accounts.map((a, i) => (
+            <AccountCard key={i} {...a} />
+          ))}
+        </section>
 
-      {/* Additional products */}
-      <section className="acc__products">
-        {products.map((p, i) => (
-          <ProductTile key={i} {...p} />
-        ))}
-      </section>
+        {/* Savings goals row */}
+        <section className="acc__row">
+          <SavingGoalMini {...goal} />
+        </section>
+
+        {/* Additional products */}
+        <section className="acc__products">
+          {products.map((p, i) => (
+            <ProductTile key={i} {...p} />
+          ))}
+        </section>
+      </div>
     </div>
   );
 }
+
