@@ -9,6 +9,9 @@ import CardsIcon from "../assets/cards.svg";
 import InvestIcon from "../assets/invest.svg";
 import TwinIcon from "../assets/twin.svg";
 
+// ✅ Importación de avatar SVG
+import AvatarIcon from "../assets/avatar.svg";
+
 const items = [
   { to: "/", label: "Inicio", icon: HomeIcon },
   { to: "/transfer", label: "Transferencia", icon: TransferIcon },
@@ -23,7 +26,9 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar__profile">
-        <div className="avatar"></div>
+        {/* ✅ Avatar SVG */}
+        <img src={AvatarIcon} alt="Avatar" className="avatar-img" />
+
         <div className="sidebar__name">Emiliano Altamirano Baez</div>
         <div className="sidebar__rule" />
       </div>
