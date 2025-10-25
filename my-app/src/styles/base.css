@@ -46,6 +46,7 @@ html, body, * {
   grid-template-columns: 280px 1fr;
   gap: var(--space-4);
   padding: var(--space-4);
+  align-items: start;            /* ⬅️ clave */
 }
 
 /* Sidebar estilo Figma */
@@ -779,3 +780,13 @@ padding-top: 30px;
   .qt__label{ width:calc(var(--qt-icon-size) + 10px); font-size:13px; }
 }
 
+.avatar-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 50%;
+  
+  padding: 6px;
+  display: block;
+  margin: 0 ;
+}
