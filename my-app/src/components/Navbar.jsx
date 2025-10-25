@@ -1,41 +1,41 @@
-import Logo from "../assets/logo.svg"; 
+import Logo from "../assets/logo.svg";
 
 export default function Navbar() {
   return (
-    <header
-      style={{
-        padding: "12px 0",
-        borderBottom: "1px solid rgba(255,255,255,.08)",
-        backgroundColor: "var(--color-fondo, #fff)", 
-      }}
-    >
-      <div
-        className="container"
+    <>
+      <header
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "0 24px", 
+          padding: "12px 0",
+          backgroundColor: "#113F63",
         }}
       >
-        {/* 🏦 Logo */}
-        <img
-          src={Logo}
-          alt="Capital One"
-          style={{ height: "32px", objectFit: "contain" }}
-        />
-
-        {/* 👋 Texto a la derecha */}
-        <span
+        <div
+          className="container"
           style={{
-            color: "var(--color-texto-suave, #666)",
-            fontSize: 14,
-            marginRight: "20px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "0 24px",
           }}
         >
-          Hola, Emiliano
-        </span>
-      </div>
-    </header>
+          <img
+            src={Logo}
+            alt="Capital One"
+            style={{ height: "32px", objectFit: "contain" }}
+          />
+          <span style={{ color: "#f6f3f3ff", fontSize: 14, marginRight: "20px" }}>
+            Hola, Emiliano
+          </span>
+        </div>
+      </header>
+
+      {/* 💙 Franja azul debajo */}
+      <div
+        style={{
+          height: "6px",
+          backgroundColor: "#113F63", // color azul corporativo
+        }}
+      ></div>
+    </>
   );
 }
