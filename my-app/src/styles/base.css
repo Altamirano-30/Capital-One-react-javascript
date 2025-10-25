@@ -665,3 +665,117 @@ html, body, * {
   font-size: 14px;
   margin-top: 6px;
 }
+
+/* ===== Spending Overview ===== */
+/* 🎨 Colores editables */
+:root{
+  --spend-fill:   #1f3650;  /* barra llena (azul) */
+  --spend-empty:  #ffffff;  /* tramo vacío */
+  --spend-muted:  #6b7280;  /* texto “reached” */
+}
+
+.spendCard{
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.spend__head{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: 10px;
+}
+
+.spend__list{
+padding-top: 30px;
+  display:grid; gap: 14px;
+}
+
+/* fila: barra + etiqueta derecha */
+.spend__row{
+  display:grid;
+  grid-template-columns: 1fr 120px;  /* barra / texto */
+  gap: 14px;
+  align-items:center;
+}
+
+/* barra */
+.spend__bar{
+  height: 16px;
+  border-radius: 6px;
+  background: var(--spend-empty);
+  box-shadow: inset 0 0 0 1px #e5e7eb;
+  overflow: hidden;
+}
+.spend__fill{
+  height: 100%;
+  background: var(--spend-fill);
+  border-radius: 6px;
+  transition: width .25s ease;
+}
+
+/* etiqueta a la derecha */
+.spend__label{
+  justify-self: end;
+  color: var(--spend-muted);
+  font-size: 14px;
+}
+.spend__label strong{
+  color: inherit;
+}
+
+/* responsive pequeño */
+@media (max-width: 640px){
+  .spend__row{ grid-template-columns: 1fr auto; }
+}
+
+
+/* ===== Quick Transfer =====
+   🎨 Cambia colores aquí:
+   --qt-ring: color del borde del círculo
+   --qt-add-bg: fondo del botón "Add new"
+   --qt-label: color del texto bajo los círculos
+*/
+/* ===== Quick Transfer (para SVG COMPLETOS con círculo incluido) ===== */
+/* Ajusta solo estas variables si quieres espaciar o cambiar tipografía */
+/* Quick Transfer (SVGs ya traen el círculo) */
+:root{
+  --qt-gap: 24px;
+  --qt-icon-size: 72px;     /* ajusta tamaño del svg mostrado */
+  --qt-text-color: #374151; /* color de los nombres */
+}
+
+.qtCard{ border-radius:14px; padding:16px 18px; }
+.qt__title{ display:block; font-weight:800; margin-bottom:12px; }
+
+.qt__list{ display:flex; align-items:flex-start; gap:var(--qt-gap); flex-wrap:wrap; }
+
+.qt__item{
+  background:transparent; border:0; padding:0; text-align:center;
+  cursor:pointer; font:inherit; color:inherit;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+
+.qt__icon{
+  width:var(--qt-icon-size);
+  height:var(--qt-icon-size);
+  object-fit:contain;
+  transition: transform .15s ease;
+}
+
+.qt__item:hover .qt__icon{ transform: translateY(-1px); }
+.qt__item:focus-visible .qt__icon{ outline:3px solid #94caff; outline-offset:3px; border-radius:999px; }
+
+.qt__label{
+  display:block;
+  width:calc(var(--qt-icon-size) + 14px);
+  color:var(--qt-text-color);
+  font-size:14px;
+  line-height:1.15;
+  word-break:break-word;
+}
+.qt__labelLine{ display:block; }
+
+@media (max-width:640px){
+  :root{ --qt-gap:16px; --qt-icon-size:64px; }
+  .qt__label{ width:calc(var(--qt-icon-size) + 10px); font-size:13px; }
+}
+

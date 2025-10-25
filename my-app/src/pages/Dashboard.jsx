@@ -4,6 +4,8 @@ import TransactionsPanel from "../components/TransactionsPanel";
 import StatisticsCard from "../components/StatisticsCard";
 import GoalsCard from "../components/GoalsCard";
 import GoalIcon from "../assets/goal-sign.svg";
+import SpendingOverview from "../components/SpendingOverview";
+import QuickTransfer from "../components/QuickTransfer";
 
 export default function Dashboard() {
   return (
@@ -53,8 +55,10 @@ export default function Dashboard() {
                 onPrev={() => {}}
                 onNext={() => {}}
             />
-          <div className="card h-180">Spending Overview</div>
-          <div className="card h-180">Quick Transfer</div>
+           <SpendingOverview items={[62, 50, 40, 10]} />
+          <QuickTransfer
+  contacts={["Emiliano Enriquez", "Emiliano Altamirano", "Diego Ferra"]}
+/>
         </section>
       </div>
     </div>
