@@ -1,12 +1,59 @@
 html, body, * {
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial !important;
+  
 }
+
+/* 1) Quita el margen por defecto del body (causa típico de overflow) */
+html, body {
+  margin: 0;
+  padding: 0;
+  /* Usa clip en vez de hidden para no forzar reflujo de layout */
+  overflow-x: clip;
+}
+
+/* 2) Evita que los grids/flex “empujen” el ancho (muy importante) */
+.dash,
+.dash__top,
+.dash__bottom,
+.statsRow {
+  min-width: 0;  /* permite que las columnas encojan */
+}
+
+/* 3) Asegura que tarjetas/controles no fuercen el ancho */
+.card,
+.statsCard__grid,
+.qtCard,
+.trans__list {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* 4) Imágenes/SVG nunca más anchas que su contenedor */
+img, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 5) Sidebar: que no “desborde” cuando es sticky */
+.sidebar {
+  max-width: 100%;
+  align-self: start;   /* ya lo usas, refuerza que no se estire */
+}
+
+/* 6) Por si algún pseudo-elemento se salía (líneas del chart, etc.) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 
 :root{
     /*COLORES DE USO TOTAL*/
 
     --color-fondo : #FFFFFF;
-    --color-sidebar: #113F63;
+    --color-sidebar:rgb(0, 0, 0)3;
     --color-primario: #113F63;
     --color-secundario: #EFEFEF;
     --color-texto: #000000;
@@ -790,3 +837,14 @@ padding-top: 30px;
   display: block;
   margin: 0 ;
 }
+
+@media (max-height: 800px){
+  .statsRow .card { height: 160px; }
+  .statsCard      { height: 200px; }
+  .goalCard,
+  .spendCard,
+  .qtCard         { height: 120px; }
+
+  .card { padding: 12px 14px; } /* menos padding = más espacio útil */
+}
+
