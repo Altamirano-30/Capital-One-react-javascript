@@ -14,8 +14,7 @@ import AvatarIcon from "../assets/avatar.svg";
 
 const items = [
   { to: "/", label: "Inicio", icon: HomeIcon },
-  { to: "/transfer", label: "Transferencia", icon: TransferIcon },
-  { to: "/txn", label: "Transacción", icon: TxnIcon },
+  { to: "/transfer", label: "Transferencia", icon: TxnIcon },
   { to: "/accounts", label: "Cuentas", icon: AccountsIcon },
   { to: "/cards", label: "Tarjetas", icon: CardsIcon },
   { to: "/invest", label: "Inversiones", icon: InvestIcon },
