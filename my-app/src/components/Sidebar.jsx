@@ -1,25 +1,48 @@
+import { NavLink } from "react-router-dom";
+
+// ✅ Importación de iconos desde Figma
+import HomeIcon from "../assets/icons/home.svg";
+import TransferIcon from "../assets/icons/transfer.svg";
+import TxnIcon from "../assets/icons/transaction.svg";
+import AccountsIcon from "../assets/icons/accounts.svg";
+import CardsIcon from "../assets/icons/cards.svg";
+import InvestIcon from "../assets/icons/invest.svg";
+import TwinIcon from "../assets/icons/twin.svg";
+
+const items = [
+  { to: "/", label: "Inicio", icon: HomeIcon },
+  { to: "/transfer", label: "Transferencia", icon: TransferIcon },
+  { to: "/txn", label: "Transacción", icon: TxnIcon },
+  { to: "/accounts", label: "Cuentas", icon: AccountsIcon },
+  { to: "/cards", label: "Tarjetas", icon: CardsIcon },
+  { to: "/invest", label: "Inversiones", icon: InvestIcon },
+  { to: "/twin", label: "TwinModel", icon: TwinIcon },
+];
+
 export default function Sidebar() {
-    return (
-        <aside classname="sidebar">
-            <div className="sidebar__profile">
-                <div className="avatar" />
-                <strong>Emiliano Altamirano Baez</strong>
-            </div>
-            <nav className="sidebar__nav">
-                <a className="nav__item nav__item--active">Inicio</a>
-                <a className="nav__item">Transferencia</a>
-                <a className="nav__item">Transacción</a>
-                <a className="nav__item">Cuentas</a>
-                <a className="nav__item">Tarjetas</a>
-                <a className="nav__item">Inversiones</a>
-                <a className="nav__item">TwinModel</a>
-            </nav>
+  return (
+    <aside className="sidebar">
+      <div className="sidebar__profile">
+        <div className="avatar"></div>
+        <div className="sidebar__name">Emiliano Altamirano Baez</div>
+        <div className="sidebar__rule" />
+      </div>
 
-
-
-        </aside>
-    );
-
-
-
+      <nav className="sidebar__nav">
+        {items.map((it) => (
+          <NavLink
+            key={it.to}
+            to={it.to}
+            end
+            className={({ isActive }) =>
+              `nav__item ${isActive ? "nav__item--active" : ""}`
+            }
+          >
+            <img src={it.icon} alt="" className="nav__icon-img" />
+            <span className="nav__label">{it.label}</span>
+          </NavLink>
+        ))}
+      </nav>
+    </aside>
+  );
 }
