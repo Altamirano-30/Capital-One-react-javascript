@@ -1,8 +1,17 @@
-import Sidebar from "../components/Sidebar";              // ⬅️ AÑADIDO
+// src/pages/AccountsPage.jsx
+import Sidebar from "../components/Sidebar";
 
 import AccountCard from "../components/AccountCard";
 import SavingGoalMini from "../components/SavingGoalMini";
 import ProductTile from "../components/ProductTile";
+
+
+import TransferIcon from "../assets/transfer.svg";
+import DetailsIcon  from "../assets/details.svg";
+import DepositIcon  from "../assets/deposit.svg";
+import WithdrawIcon from "../assets/withdraw.svg";
+import PayBillIcon  from "../assets/paybill.svg";
+import HistoryIcon  from "../assets/history.svg";
 
 export default function AccountsPage() {
   // Mock data (luego vendrá de tu API)
@@ -18,8 +27,8 @@ export default function AccountsPage() {
       balance: 10000,
       mask: "****4567",
       actions: [
-        { icon: "📤", label: "Transfer" },
-        { icon: "🔍", label: "Details" },
+        { icon: TransferIcon, label: "Transfer" },
+        { icon: DetailsIcon,  label: "Details"  },
       ],
     },
     {
@@ -27,8 +36,8 @@ export default function AccountsPage() {
       balance: 5000,
       mask: "****1234",
       actions: [
-        { icon: "🏦", label: "Deposit" },
-        { icon: "🎯", label: "Withdraw Goal" },
+        { icon: DepositIcon,  label: "Deposit"       },
+        { icon: WithdrawIcon, label: "Withdraw Goal" },
       ],
     },
     {
@@ -36,8 +45,8 @@ export default function AccountsPage() {
       balance: 28501,
       mask: "****8134",
       actions: [
-        { icon: "🧾", label: "Pay Bill" },
-        { icon: "🕓", label: "History" },
+        { icon: PayBillIcon, label: "Pay Bill" },
+        { icon: HistoryIcon, label: "History"  },
       ],
     },
     {
@@ -45,8 +54,8 @@ export default function AccountsPage() {
       balance: 28501,
       mask: "tfr*98CT",
       actions: [
-        { icon: "🧾", label: "Pay Bill" },
-        { icon: "🕓", label: "History" },
+        { icon: PayBillIcon, label: "Pay Bill" },
+        { icon: HistoryIcon, label: "History"  },
       ],
     },
   ];
@@ -76,10 +85,12 @@ export default function AccountsPage() {
   ];
 
   return (
-    <div className="dash">{/* ⬅️ contenedor de 2 columnas */}
-      <Sidebar />                 {/* ⬅️ Sidebar a la izquierda */}
+    <div className="dash">
+      {/* Sidebar a la izquierda */}
+      <Sidebar />
 
-      <div className="dash__content">{/* ⬅️ contenido a la derecha */}
+      {/* Contenido a la derecha */}
+      <div className="dash__content">
         {/* Header */}
         <header className="acc__header">
           <h1>{summary.title}</h1>
@@ -114,4 +125,3 @@ export default function AccountsPage() {
     </div>
   );
 }
-

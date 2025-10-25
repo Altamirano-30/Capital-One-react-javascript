@@ -1,6 +1,6 @@
 export default function AccountCard({ name, balance, mask, actions = [] }) {
   return (
-    <div className="accCard">
+    <article className="accCard card">
       <div className="accCard__head">
         <div className="accCard__name">{name}</div>
         <div className="accCard__balance">${balance.toLocaleString()}</div>
@@ -10,11 +10,12 @@ export default function AccountCard({ name, balance, mask, actions = [] }) {
       <div className="accCard__actions">
         {actions.map((a, i) => (
           <button key={i} type="button" className="accBtn">
-            <span className="accBtn__icon">{a.icon}</span>
-            {a.label}
+            {/* ⬇️ importante: usar <img src={a.icon} /> */}
+            <img src={a.icon} alt="" className="accBtn__icon" />
+            <span>{a.label}</span>
           </button>
         ))}
       </div>
-    </div>
+    </article>
   );
 }

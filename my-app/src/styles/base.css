@@ -1049,3 +1049,39 @@ padding-top: 30px;
 
 /* Por si algún elemento desborda, garantizamos que no salga scroll X */
 html, body{ overflow-x: hidden; }
+
+/* ==== BOTONES DE ACCIÓN en AccountCard con SVG ==== */
+
+.accBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* separación entre ícono y texto */
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+}
+
+/* iconos dentro del botón */
+.accBtn__icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* Hover estilo mock */
+.accBtn:hover {
+  background: #e1e8f0;
+  border-color: #b9c5d3;
+}
+
+/* Si es botón con variante oscura (como Line of Credit) */
+.accBtn--dark {
+  background: #113F63;
+  border-color: #113F63;
+  color: #fff;
+}
+
+.accBtn--dark:hover {
+  filter: brightness(1.12);
+}
+
