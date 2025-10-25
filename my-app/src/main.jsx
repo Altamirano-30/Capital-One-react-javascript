@@ -6,6 +6,7 @@ import MainLayout from "./layouts/MainLayout"
 import Dashboard from "./pages/Dashboard"
 import AccountsPage from "./pages/AccountsPage"   // ⬅️ NEW
 import Twin from "./pages/Twin"
+import Transfer from "./pages/Transfer"
 
 import './styles/base.css'
 
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: '/', element: <Dashboard /> },
       { path: '/accounts', element: <AccountsPage /> }, // ⬅️ NEW
       { path: '/twin', element: <Twin /> },
+      {path: '/transfer', element: <Transfer /> }
       // Opcional: 404
       // { path: '*', element: <NotFound /> },
     ],
