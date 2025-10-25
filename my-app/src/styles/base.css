@@ -9,6 +9,7 @@ html, body {
   padding: 0;
   /* Usa clip en vez de hidden para no forzar reflujo de layout */
   overflow-x: clip;
+  
 }
 
 /* 2) Evita que los grids/flex “empujen” el ancho (muy importante) */
@@ -848,3 +849,84 @@ padding-top: 30px;
   .card { padding: 12px 14px; } /* menos padding = más espacio útil */
 }
 
+/* ===== Accounts page ===== */
+.accounts { display: grid; gap: 20px; }
+
+.acc__header { display: grid; gap: 8px; }
+.acc__header h1 { font-size: 28px; font-weight: 800; }
+.acc__totalWrap { display: grid; gap: 4px; }
+.acc__totalLabel { color: #6b7280; font-weight: 600; }
+.acc__total { font-size: 24px; font-weight: 800; }
+.acc__ytd { color: #9ca3af; font-size: 14px; }
+
+/* grid de tarjetas de cuentas */
+.acc__grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+}
+@media (max-width:1200px){ .acc__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width:640px){  .acc__grid { grid-template-columns: 1fr; } }
+
+/* AccountCard */
+.accCard{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  padding:16px; box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+.accCard__name{ font-weight:700; }
+.accCard__balance{ font-weight:800; margin-top:6px; }
+.accCard__mask{ color:#9ca3af; font-size:13px; margin-top:2px; }
+.accCard__actions{ display:flex; gap:8px; margin-top:12px; }
+.accBtn{
+  display:inline-flex; align-items:center; gap:8px;
+  border:1px solid #d1d5db; background:#fff; border-radius:8px;
+  padding:8px 10px; font-weight:600; cursor:pointer;
+}
+.accBtn__icon{ font-size:16px; }
+
+/* Savings goal (mini) */
+.goalMini{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+.goalMini__title{ font-weight:800; margin-bottom:10px; }
+.goalMini__grid{ display:grid; gap:14px; grid-template-columns: 1.2fr 1fr .7fr; }
+@media (max-width:1100px){ .goalMini__grid{ grid-template-columns: 1fr; } }
+
+.goalMini__name{ font-weight:700; margin-bottom:4px; }
+.goalMini__pct{ color:#111; margin-bottom:8px; }
+.goalMini__pct strong{ font-weight:800; }
+.goalMini__bar{ height:12px; border-radius:8px; background:#f4f6f8; overflow:hidden; box-shadow: inset 0 0 0 1px #e5e7eb; }
+.goalMini__fill{ height:100%; background:#1f3650; width:0; transition: width .3s ease; }
+.goalMini__subline{ color:#9ca3af; font-size:12px; margin-top:6px; }
+
+.goalMini__metaRow{ display:flex; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.goalMini__metaLabel{ color:#6b7280; }
+.goalMini__metaValue{ font-weight:600; }
+
+.goalMini__cta{
+  border:1px solid #d1d5db; background:#fff; border-radius:8px; padding:8px 12px; font-weight:700; cursor:pointer;
+}
+.goalMini__cta--secondary{ background:#1f3650; color:#fff; border-color:#1f3650; }
+
+.goalMini__right{ display:flex; flex-direction:column; gap:10px; }
+
+/* Productos */
+.acc__products{
+  display:grid; gap:16px;
+  grid-template-columns: 1fr 1fr;
+}
+@media (max-width:900px){ .acc__products{ grid-template-columns: 1fr; } }
+
+.prodTile{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  padding:16px; display:flex; justify-content:space-between; align-items:center;
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+.prodTile__title{ font-weight:800; }
+.prodTile__text{ color:#6b7280; }
+.prodTile__cta{
+  border:1px solid #1f3650; color:#1f3650; background:#fff; border-radius:8px; padding:8px 12px; font-weight:700; cursor:pointer;
+}
+.prodTile--dark .prodTile__cta,
+.prodTile__cta.is-dark{ background:#1f3650; color:#fff; border-color:#1f3650; }
