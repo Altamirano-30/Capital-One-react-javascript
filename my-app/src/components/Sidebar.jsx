@@ -1,13 +1,13 @@
 import { NavLink } from "react-router-dom";
 
 // ✅ Importación de iconos desde Figma
-import HomeIcon from "../assets/icons/home.svg";
-import TransferIcon from "../assets/icons/transfer.svg";
-import TxnIcon from "../assets/icons/transaction.svg";
-import AccountsIcon from "../assets/icons/accounts.svg";
-import CardsIcon from "../assets/icons/cards.svg";
-import InvestIcon from "../assets/icons/invest.svg";
-import TwinIcon from "../assets/icons/twin.svg";
+import HomeIcon from "../assets/home.svg";
+import TransferIcon from "../assets/transfer.svg";
+import TxnIcon from "../assets/transaction.svg";
+import AccountsIcon from "../assets/accounts.svg";
+import CardsIcon from "../assets/cards.svg";
+import InvestIcon from "../assets/invest.svg";
+import TwinIcon from "../assets/twin.svg";
 
 const items = [
   { to: "/", label: "Inicio", icon: HomeIcon },
