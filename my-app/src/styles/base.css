@@ -1454,3 +1454,124 @@ html, body{ overflow-x: hidden; }
 .btn.light{ background:#fff; border:1px solid #e6e9ee; }
 .btn.link{ background:transparent; color:#113F63; font-weight:600; padding:0; }
 .btn:hover{ filter:brightness(.98); }
+
+/* ========== INVESTMENTS ========== */
+.invest { display: grid; gap: 24px; }
+
+/* Resumen */
+.invest__summary{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:18px;
+}
+.invest__sumBox{ background:#fff; border:1px solid #e6e9ee; border-radius:12px; padding:14px; }
+.invest__big{ font-weight:800; font-size: clamp(22px,2vw,30px); }
+.invest__kpi{ font-weight:800; font-size: clamp(20px,1.8vw,26px); }
+.invest__kpi.pos{ color:#22c55e; }
+.muted{ color:#6b7280; }
+.muted.small{ font-size: 13px; }
+
+/* Distribución */
+.invest__dist .invest__head,
+.invest__explore .invest__head,
+.invest__controls .invest__head{ margin-bottom:10px; }
+
+.invest__dist{ padding:16px; }
+.invest__distGrid{
+  display:grid;
+  grid-template-columns: 1.1fr 1.4fr;
+  gap:18px;
+}
+.invest__donutWrap{ display:grid; grid-template-columns: auto; justify-items:center; align-items:start; gap:10px; }
+
+.donut{ overflow:visible; }
+.donut__seg{ stroke-linecap: butt; }
+
+/* leyenda */
+.legend{ display:flex; align-items:center; gap:8px; margin:4px 0; font-size:14px; }
+.legend .dot{ width:10px; height:10px; border-radius:2px; display:inline-block; }
+.legend__label{ min-width: 140px; }
+.legend__pct{ margin-left:auto; font-weight:700; }
+
+/* Tabla */
+.invest__tableWrap{ overflow:auto; }
+.invest__table{ width:100%; border-collapse: collapse; }
+.invest__table th, .invest__table td{
+  padding:10px 12px; border-bottom:1px solid #eef2f7; text-align:left;
+}
+.invest__table td.pos{ color:#22c55e; font-weight:700; }
+
+/* aparición por fila */
+.row-anim{
+  opacity:0;
+  transform: translateY(6px);
+  animation: rowIn .4s ease forwards;
+  animation-delay: calc(var(--i) * 70ms);
+}
+@keyframes rowIn{ to{ opacity:1; transform:none; }}
+
+/* Oportunidades */
+.invest__tiles{
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap:14px;
+}
+.tile{
+  border:1px solid #e6e9ee; border-radius:12px; padding:14px; background:#fff;
+  transform: translateY(8px) scale(.98); opacity:0;
+}
+.tile.pop{ animation: popIn .45s cubic-bezier(.2,.9,.2,1) forwards; animation-delay: var(--d, 0ms); }
+@keyframes popIn{ to{ transform:none; opacity:1; } }
+.tile__icon{ font-size:22px; }
+.tile__title{ font-weight:700; margin-top:4px; }
+.tile__txt{ color:#6b7280; font-size:14px; margin:6px 0 10px; }
+
+/* Controles (mock) */
+.invest__controls{ padding:16px; }
+.ctrl__row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0; }
+.ctrl__val{ font-weight:700; }
+.ctrl__input{
+  border:1px solid #e6e9ee; border-radius:10px; padding:8px 10px; background:#fff;
+}
+
+/* Utilidades */
+.card{ background:#fff; border:1px solid #e6e9ee; border-radius:14px; padding:18px; box-shadow:0 6px 18px rgba(16,24,40,.06); }
+.btn{ border:0; cursor:pointer; font-weight:700; border-radius:10px; padding:10px 14px; }
+.btn.primary{ background:#113F63; color:#fff; }
+.btn.light{ background:#fff; border:1px solid #e6e9ee; }
+
+/* Responsive */
+@media (max-width: 1100px){
+  .invest__summary{ grid-template-columns: 1fr; }
+  .invest__distGrid{ grid-template-columns: 1fr; }
+}
+
+/* Donut + callouts */
+.donut { overflow: visible; }
+.donut__seg { stroke-linecap: butt; }
+
+/* Etiquetas (líneas + texto) */
+.donut__labels .donut__label path { opacity: .9; }
+.donut__labels text { font-size: 12px; fill: #111827; paint-order: stroke; }
+.donut__labels .lbl-name { font-weight: 600; }
+.donut__labels .lbl-pct  { fill: #6b7280; font-weight: 700; }
+
+/* Opcional: media para pantallas pequeñas */
+@media (max-width: 1100px){
+  .donut__labels text { font-size: 11px; }
+}
+
+/* Donut con columnas fijas */
+.donut--cols { overflow: visible; }
+.donut__labels text{
+  font-size: 13px;
+  fill: #0f172a;
+  paint-order: stroke;
+  stroke: #fff; stroke-width: 3px; /* halo blanco para legibilidad */
+}
+.donut__labels .lbl-name { font-weight: 700; }
+.donut__labels .lbl-pct  { fill: #6b7280; font-weight: 700; }
+.donut__label path { opacity: .95; }
+
+@media (max-width: 1100px){
+  .donut__labels text{ font-size: 12px; }
+}

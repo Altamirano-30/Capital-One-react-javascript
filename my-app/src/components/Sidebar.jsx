@@ -17,7 +17,7 @@ const items = [
   { to: "/transfer", label: "Transferencia", icon: TxnIcon },
   { to: "/accounts", label: "Cuentas", icon: AccountsIcon },
   { to: "/cards", label: "Tarjetas", icon: CardsIcon },
-  { to: "/invest", label: "Inversiones", icon: InvestIcon },
+  { to: "/investments", label: "Inversiones", icon: InvestIcon },
   { to: "/twin", label: "TwinModel", icon: TwinIcon },
 ];
 

@@ -8,7 +8,7 @@ import AccountsPage from "./pages/AccountsPage"
 import CardsPage from "./pages/CardsPage";
 import Twin from "./pages/Twin"
 import TransferPage from "./pages/TransferPage";
-import Invest from "./pages/Invest"
+import InvestmentsPage from "./pages/InvestmentsPage";
 
 import './styles/base.css'
 
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       { path: '/cards', element: <CardsPage /> }, // ⬅️ NEW
       { path: '/twin', element: <Twin /> },
       { path: "/transfer", element: <TransferPage /> },
-      { path: '/invest', element: <Invest /> }
+{ path: "/investments", element: <InvestmentsPage /> },
       // Opcional: 404
       // { path: '*', element: <NotFound /> },
     ],
