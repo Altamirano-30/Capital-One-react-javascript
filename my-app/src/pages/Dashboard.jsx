@@ -16,42 +16,45 @@ export default function Dashboard() {
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        const res = await fetch(
-          "https://hack-mty-2025.vercel.app/users/cust_001/balance_history"
+useEffect(() => {
+  const fetchBalance = async () => {
+    try {
+      const res = await fetch("/api/users/cust_001/balance_history");
+      const data = await res.json();
+
+      console.log("DATA DEL ENDPOINT:", data); // Para ver cómo llega
+
+      const history = Array.isArray(data) ? data : data.balance_history || [];
+
+      if (history.length > 0) {
+        // Ordenamos por fecha descendente y tomamos el registro más reciente
+        const sortedHistory = history.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
         );
-        const data = await res.json();
 
-        console.log("DATA DEL ENDPOINT:", data); // Para ver cómo llega
+        const latestRecord = sortedHistory[0];
 
-        const history = Array.isArray(data) ? data : data.balance_history || [];
+        console.log("Registro más reciente:", latestRecord);
 
-        if (history.length > 0) {
-          // Tomamos simplemente el primer registro
-          const anyRecord = history[0];
-
-          console.log("Registro tomado:", anyRecord);
-
-          setBalanceData({
-            balance: Number(anyRecord.balance) || 0,
-            income: Number(anyRecord.daily_inflow) || 0,
-            expenses: Number(anyRecord.daily_outflow) || 0,
-          });
-        } else {
-          console.warn("No hay registros en balance_history");
-        }
-
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching balance:", err);
-        setLoading(false);
+        setBalanceData({
+          balance: Number(latestRecord.balance) || 0,
+          income: Number(latestRecord.daily_inflow) || 0,
+          expenses: Number(latestRecord.daily_outflow) || 0,
+        });
+      } else {
+        console.warn("No hay registros en balance_history");
       }
-    };
 
-    fetchBalance();
-  }, []);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching balance:", err);
+      setLoading(false);
+    }
+  };
+
+  fetchBalance();
+}, []);
+
 
   return (
     <div className="dash">
@@ -67,18 +70,18 @@ export default function Dashboard() {
                 amount={
                   loading
                     ? "Cargando..."
-                    : `USD ${balanceData.balance.toLocaleString()}.00`
+                    : `USD ${balanceData.balance.toLocaleString("en-US")}`
                 }
                 percent="2.36 %"
                 income={
                   loading
                     ? "Cargando..."
-                    : `USD ${balanceData.income.toLocaleString()}`
+                    : `USD ${balanceData.income.toLocaleString("en-US")}`
                 }
                 expenses={
                   loading
                     ? "Cargando..."
-                    : `USD ${balanceData.expenses.toLocaleString()}`
+                    : `USD ${balanceData.expenses.toLocaleString("en-US")}`
                 }
               />
 
