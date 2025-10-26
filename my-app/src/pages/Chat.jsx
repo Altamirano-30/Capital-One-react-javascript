@@ -69,7 +69,7 @@ export default function Chat() {
   return (
     <div
       style={{
-        height: '100vh',
+        height: '80vh',
         display: 'grid',
         gridTemplateRows: '1fr auto',
         padding: 16,
