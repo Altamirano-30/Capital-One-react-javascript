@@ -1314,3 +1314,64 @@ html, body{ overflow-x: hidden; }
 }
 .btn-ghost:hover{ background:#f8fafc; }
 
+
+
+/*cambiooooos*/
+/* Asegura que nada debajo de la tarjeta pinte fondo */
+.cardItem__wrap,
+.cardItem__meta,
+.cardItem__meta::before,
+.cardItem__meta::after {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Si algún wrapper del carrusel lo pinta */
+.cardCarousel,
+.carousel__viewport,
+.cardItem,
+.cardItem::before,
+.cardItem::after {
+  background: transparent !important;
+}
+
+.cardsWrapper,
+.cardsWrapper::before,
+.cardArea,
+.cardArea::before,
+.cardsRail,
+.cardsRail::before {
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.cardItem--active {
+  /* sombra de la tarjeta, no de un panel debajo */
+  box-shadow: 0 18px 34px rgba(16,24,40,.18);
+}
+
+.cardItem__svgWrap {
+  background: transparent !important;
+  box-shadow: none; /* la sombra ya está en .cardItem--active */
+}
+.cardCarousel * {
+  background: transparent !important;
+}
+.cardItem--active { z-index: 30; }
+.cardItem--next   { z-index: 20; }
+.cardItem--prev   { z-index: 20; }
+.cardItem--hidden { z-index: 10; }
+
+/* 🔥 Mata cualquier fondo/sombra/blur dentro del carrusel, incl. pseudo-elems */
+.cardCarousel,
+.cardCarousel * ,
+.cardCarousel *::before,
+.cardCarousel *::after {
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: transparent !important;
+}
