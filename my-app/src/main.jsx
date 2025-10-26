@@ -9,6 +9,7 @@ import CardsPage from "./pages/CardsPage";
 import Twin from "./pages/Twin"
 import TransferPage from "./pages/TransferPage";
 import InvestmentsPage from "./pages/InvestmentsPage";
+import Chat from './pages/Chat';
 
 import './styles/base.css'
 
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
       { path: '/', element: <Dashboard /> },
       { path: '/accounts', element: <AccountsPage /> },
       { path: '/cards', element: <CardsPage /> }, // ⬅️ NEW
-      { path: '/twin', element: <Twin /> },
+      { path: '/twin/', element: <Chat /> },
       { path: "/transfer", element: <TransferPage /> },
 { path: "/investments", element: <InvestmentsPage /> },
       // Opcional: 404
