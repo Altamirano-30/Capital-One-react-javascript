@@ -4,7 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 
 import MainLayout from "./layouts/MainLayout"
 import Dashboard from "./pages/Dashboard"
-import AccountsPage from "./pages/AccountsPage"   // ⬅️ NEW
+import AccountsPage from "./pages/AccountsPage"
+import CardsPage from "./pages/CardsPage";
 import Twin from "./pages/Twin"
 import Transfer from "./pages/Transfer"
 
@@ -15,7 +16,8 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { path: '/', element: <Dashboard /> },
-      { path: '/accounts', element: <AccountsPage /> }, // ⬅️ NEW
+      { path: '/accounts', element: <AccountsPage /> },
+      { path: '/cards', element: <CardsPage /> }, // ⬅️ NEW
       { path: '/twin', element: <Twin /> },
       {path: '/transfer', element: <Transfer /> }
       // Opcional: 404
