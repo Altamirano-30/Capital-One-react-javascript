@@ -1,7 +1,7 @@
 // src/pages/CardsPage.jsx
 import Sidebar from "../components/Sidebar";
 import CardCarousel from "../components/CardCarousel";
-
+import QuickAction from "../components/QuickAction"; // opcional, ver nota
 import ProductTile from "../components/ProductTile";
 
 import BlockIcon from "../assets/block.svg";

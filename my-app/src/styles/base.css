@@ -1087,7 +1087,7 @@ html, body{ overflow-x: hidden; }
 
 /* ====== Cards page styles ====== */
 .cards__header h1 { font-size: clamp(28px, 2.6vw, 36px); margin: 6px 0; }
-.cards__header .muted { color: #6b7280; margin-bottom: 12px; }
+.cards__header .muted { color: #6b7280; margin-bottom: 12px; padding-bottom: 30px; }
 
 /* carousel */
 .cardCarousel {
@@ -1147,7 +1147,7 @@ html, body{ overflow-x: hidden; }
 
 /* quick actions row */
 .cards__quickActions{
-  display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px;
+  display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px ;padding-top: 50px;
 }
 .quickAction {
   display:flex; align-items:center; gap:10px; padding:10px 14px;
@@ -1180,3 +1180,137 @@ html, body{ overflow-x: hidden; }
   .cards__bottom{ grid-template-columns: 1fr; }
   .cardItem__wrap { width: 320px; }
 }
+
+/* ====== Carousel con efecto 3D y stacking correcto ====== */
+.cardCarousel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 22px;
+}
+
+.carousel__nav {
+  background: #ffffff;
+  border: 1px solid #e6e9ee;
+  width: 44px; height: 44px;
+  border-radius: 999px;
+  display: grid; place-items:center;
+  box-shadow: 0 6px 18px rgba(16,24,40,.06);
+}
+
+.carousel__viewport {
+  flex: 1 1 auto;
+  height: 240px;             /* un poco más alto */
+  position: relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow: visible;
+
+  /* 🔥 3D */
+  perspective: 1200px;
+}
+
+/* Cada "slide" */
+.cardItem {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  transition:
+    transform .45s cubic-bezier(.2,.9,.2,1),
+    opacity   .35s ease,
+    filter    .35s ease,
+    box-shadow .35s ease;
+  opacity: 0;
+  pointer-events: none; /* por defecto no interactúa */
+}
+
+/* Estados con 3D + z-index lo maneja inline (style={{zIndex}}) */
+.cardItem--active {
+  transform: translateX(0) translateZ(0) rotateY(0deg) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  box-shadow: 0 18px 34px rgba(16,24,40,.18);
+}
+
+.cardItem--prev {
+  transform: translateX(-260px) translateZ(-40px) rotateY(14deg) scale(.92);
+  opacity: .95;
+  pointer-events: auto;
+  filter: saturate(.9) brightness(.98);
+  box-shadow: 0 12px 22px rgba(16,24,40,.12);
+}
+
+.cardItem--next {
+  transform: translateX(260px) translateZ(-40px) rotateY(-14deg) scale(.92);
+  opacity: .95;
+  pointer-events: auto;
+  filter: saturate(.9) brightness(.98);
+  box-shadow: 0 12px 22px rgba(16,24,40,.12);
+}
+
+.cardItem--hidden {
+  transform: translateX(0) translateZ(-120px) rotateY(0deg) scale(.78);
+  opacity: 0;
+  filter: blur(.4px) saturate(.8);
+}
+
+/* Contenido de cada tarjeta (envoltorio) */
+.cardItem__wrap {
+  width: 420px; max-width: 64vw;
+  background-color: #f1f1f100;
+  display:block;
+}
+
+.cardItem__svgWrap { border-radius: 14px; overflow:hidden; }
+.cardItem__svg { width:100%; height:auto; display:block; }
+
+/* meta debajo */
+.cardItem__meta {
+  margin-top: 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.cardItem__title { font-weight:700; font-size: 16px; }
+.cardItem__pan   { font-weight:600; color:#374151; }
+
+.cardItem__row { display:flex; gap:12px; align-items:center; margin-top:8px; }
+.cardItem__cvv { color:#6b7280; font-size:14px; display:flex; gap:8px; align-items:center; }
+.cardItem__cvvValue { font-weight:700; margin-left:6px; }
+
+/* Responsive */
+@media (max-width: 1000px){
+  .cardItem__wrap { width: 340px; }
+  .cardItem--prev { transform: translateX(-200px) translateZ(-40px) rotateY(12deg) scale(.9); }
+  .cardItem--next { transform: translateX(200px)  translateZ(-40px) rotateY(-12deg) scale(.9); }
+}
+
+/* Meta oculta por defecto */
+.cardItem__meta{
+  margin-top: 12px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .25s ease, transform .25s ease;
+  pointer-events: none;
+}
+
+/* Visible solo si la tarjeta es activa */
+.cardItem--active .cardItem__meta,
+.cardItem__meta.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Botón CVV estilo ghost */
+.btn-ghost{
+  background: #fff;
+  border: 1px solid #e6e9ee;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(16,24,40,.06);
+}
+.btn-ghost:hover{ background:#f8fafc; }
+
