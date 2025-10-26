@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-
+import ChatDashboard from "./pages/ChatDashboard";
 import MainLayout from "./layouts/MainLayout"
 import Dashboard from "./pages/Dashboard"
 import AccountsPage from "./pages/AccountsPage"
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
       { path: '/', element: <Dashboard /> },
       { path: '/accounts', element: <AccountsPage /> },
       { path: '/cards', element: <CardsPage /> }, // ⬅️ NEW
-      { path: '/twin/', element: <Chat /> },
+      { path: '/twin/', element: <ChatDashboard /> },
       { path: "/transfer", element: <TransferPage /> },
 { path: "/investments", element: <InvestmentsPage /> },
       // Opcional: 404
