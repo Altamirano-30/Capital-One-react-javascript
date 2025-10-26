@@ -16,6 +16,8 @@ export default function Dashboard() {
     percent: 0,
   });
   const [transactions, setTransactions] = useState([]);
+  const [goals, setGoals] = useState([]);        // <-- estado para todos los goals
+  const [currentGoalIdx, setCurrentGoalIdx] = useState(0); // <-- índice del goal mostrado
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -54,22 +56,19 @@ export default function Dashboard() {
         const resTransactions = await fetch("/api/users/cust_001/transactions");
         const transactionsData = await resTransactions.json();
 
-        // Filtrar transacciones reales (descartar las "synthetic" o "test")
         const filtered = transactionsData.filter(
           (t) =>
             t.merchant_name &&
             !t.merchant_name.toLowerCase().includes("synthetic")
         );
 
-        // Mapear al formato necesario
         const mappedTransactions = filtered.slice(0, 5).map((t) => {
           const name = t.merchant_name || t.description;
           const amountValue = Number(t.amount) || 0;
 
-          // Formatear categoría (tag)
           let tag = t.category || t.type || "Other";
-          tag = tag.split("_")[0]; // tomar antes del guion bajo
-          tag = tag.charAt(0).toUpperCase() + tag.slice(1); // primera mayúscula
+          tag = tag.split("_")[0];
+          tag = tag.charAt(0).toUpperCase() + tag.slice(1);
 
           return {
             icon: name.charAt(0).toUpperCase(),
@@ -81,6 +80,21 @@ export default function Dashboard() {
         });
 
         setTransactions(mappedTransactions);
+
+        // --- Goals ---
+        const resGoals = await fetch("/api/users/cust_001/goals");
+        const goalsData = await resGoals.json();
+
+        const mappedGoals = goalsData.map(goal => ({
+          id: goal.id,
+          goalName: goal.name,
+          current: goal.current_progress,
+          total: goal.target_amount,
+          icon: GoalIcon
+        }));
+
+        setGoals(mappedGoals);
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -90,6 +104,16 @@ export default function Dashboard() {
 
     fetchData();
   }, []);
+
+  const handlePrevGoal = () => {
+    setCurrentGoalIdx((prev) => (prev > 0 ? prev - 1 : goals.length - 1));
+  };
+
+  const handleNextGoal = () => {
+    setCurrentGoalIdx((prev) => (prev < goals.length - 1 ? prev + 1 : 0));
+  };
+
+  const currentGoal = goals[currentGoalIdx];
 
   return (
     <div className="dash">
@@ -102,22 +126,10 @@ export default function Dashboard() {
               <StatCard
                 variant="balance"
                 title="Total Balance"
-                amount={
-                  loading
-                    ? "Cargando..."
-                    : `USD ${balanceData.balance.toLocaleString("en-US")}`
-                }
+                amount={loading ? "Cargando..." : `USD ${balanceData.balance.toLocaleString("en-US")}`}
                 percent={`${balanceData.percent || 0} %`}
-                income={
-                  loading
-                    ? "Cargando..."
-                    : `USD ${balanceData.income.toLocaleString("en-US")}`
-                }
-                expenses={
-                  loading
-                    ? "Cargando..."
-                    : `USD ${balanceData.expenses.toLocaleString("en-US")}`
-                }
+                income={loading ? "Cargando..." : `USD ${balanceData.income.toLocaleString("en-US")}`}
+                expenses={loading ? "Cargando..." : `USD ${balanceData.expenses.toLocaleString("en-US")}`}
               />
 
               <StatCard
@@ -136,19 +148,23 @@ export default function Dashboard() {
         </section>
 
         <section className="dash__bottom">
-          <GoalsCard
-            title="Goals"
-            goalName="Summer Vacation"
-            current={1485}
-            total={2400}
-            icon={GoalIcon}
-            onPrev={() => {}}
-            onNext={() => {}}
-          />
+          {currentGoal ? (
+            <GoalsCard
+              key={currentGoal.id}
+              title="Goal"
+              goalName={currentGoal.goalName}
+              current={currentGoal.current}
+              total={currentGoal.total}
+              icon={currentGoal.icon}
+              onPrev={handlePrevGoal}
+              onNext={handleNextGoal}
+            />
+          ) : (
+            <div>Loading goals...</div>
+          )}
+
           <SpendingOverview items={[62, 50, 40, 10]} />
-          <QuickTransfer
-            contacts={["Emiliano Enriquez", "Emiliano Altamirano", "Diego Ferra"]}
-          />
+          <QuickTransfer contacts={["Emiliano Enriquez", "Emiliano Altamirano", "Diego Ferra"]} />
         </section>
       </div>
     </div>
