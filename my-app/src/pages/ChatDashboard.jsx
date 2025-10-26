@@ -1,7 +1,8 @@
 // src/pages/ChatDashboard.jsx
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Chat from "./Chat";
+import { sendVoice } from "../api/voice"; // ⬅️ usamos tu helper de voz
 
 /* ===== Helpers SVG para semicírculo ===== */
 function polarToCartesian(cx, cy, r, angleDeg) {
@@ -24,7 +25,6 @@ function Sparkline({ data = [], width = 520, height = 120, pad = 8 }) {
       </div>
     );
   }
-  // normalizar
   const xs = data.map((d) => d.x);
   const ys = data.map((d) => d.y);
   const minX = Math.min(...xs), maxX = Math.max(...xs);
@@ -34,7 +34,6 @@ function Sparkline({ data = [], width = 520, height = 120, pad = 8 }) {
 
   const points = data.map((d) => {
     const x = pad + ((d.x - minX) / dx) * (width - 2 * pad);
-    // invertimos y para que valores altos vayan arriba
     const y = pad + (1 - (d.y - minY) / dy) * (height - 2 * pad);
     return `${x},${y}`;
   });
@@ -45,7 +44,6 @@ function Sparkline({ data = [], width = 520, height = 120, pad = 8 }) {
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Predicted balance sparkline">
-      {/* grid base ligera */}
       <line x1={pad} y1={height - pad} x2={width - pad} y2={height - pad} stroke="#e2e8f0" strokeWidth="1" />
       <polyline
         fill="none"
@@ -54,7 +52,6 @@ function Sparkline({ data = [], width = 520, height = 120, pad = 8 }) {
         points={points.join(" ")}
         vectorEffect="non-scaling-stroke"
       />
-      {/* punto final */}
       {points.length > 0 && (
         <circle
           cx={points[points.length - 1].split(",")[0]}
@@ -72,8 +69,8 @@ function Sparkline({ data = [], width = 520, height = 120, pad = 8 }) {
 /* 2) Financial Score — grande */
 function FinancialScoreCard() {
   const score = 76; // 0–100
-  const size = 160;   // antes 118
-  const stroke = 14;  // antes 10
+  const size = 160;
+  const stroke = 14;
   const radius = (size - stroke) / 2;
   const clamped = Math.max(0, Math.min(100, score));
   const arcD = describeArc(size / 2, size / 2, radius, 180, 180 + (clamped / 100) * 180);
@@ -122,7 +119,6 @@ function FinancialScoreCard() {
   );
 }
 
-/* 1) Predicted Total Balance — enfatizado */
 /* 1) Predicted Total Balance — énfasis visual */
 function PredictedBalanceCard({ nextMonthBalance, deltaPercent }) {
   const positive = deltaPercent >= 0;
@@ -130,7 +126,6 @@ function PredictedBalanceCard({ nextMonthBalance, deltaPercent }) {
 
   return (
     <div className="card card--compact card--emph card--accent stat fade-in" style={{ minWidth: 0 }}>
-      {/* Head */}
       <div className="stat__head stat__head--tight">
         <span className="stat__title stat__title--bold">Predicted Total Balance</span>
         <span className={`badge-pill ${positive ? "pill--up" : "pill--down"}`}>
@@ -138,7 +133,6 @@ function PredictedBalanceCard({ nextMonthBalance, deltaPercent }) {
         </span>
       </div>
 
-      {/* Monto XL */}
       <div
         className="stat__amount stat__amount--xl"
         title={`USD ${Number(nextMonthBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`}
@@ -149,10 +143,8 @@ function PredictedBalanceCard({ nextMonthBalance, deltaPercent }) {
         </span>
       </div>
 
-      {/* Divider suave */}
       <div className="soft-sep" />
 
-      {/* KPIs apilados (llenan el hueco y anclan al fondo) */}
       <div className="stat__foot stat__foot--stack">
         <div className="kpiCell">
           <span className="kpiDot kpiDot--up" />
@@ -169,7 +161,6 @@ function PredictedBalanceCard({ nextMonthBalance, deltaPercent }) {
     </div>
   );
 }
-
 
 /* 3) Predicted Balance (gráfica Sparkline) */
 function PredictedBalanceChart({ series = [] }) {
@@ -216,7 +207,7 @@ function PredictedGoals() {
             <div className="goal__text">
               <div className="goal__name">{g.name}</div>
               <div className="goal__pct"><strong>{g.pct}%</strong> predicted</div>
-              <div className="goal__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow={g.pct}>
+              <div className="goal__bar" role="progressbar" aria-valuemin="0" aria-valuemax={100} aria-valuenow={g.pct}>
                 <div className="goal__barFill" style={{ width: `${g.pct}%` }} />
               </div>
               <div className="goal__note">{g.note}</div>
@@ -290,6 +281,116 @@ function UpcomingBillsCard() {
   );
 }
 
+/* ====== Botón de voz dentro del chat ====== */
+function VoiceRecorderButton() {
+  const [isRecording, setIsRecording] = useState(false);
+  const [hasMic, setHasMic] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+
+  const mediaRecorderRef = useRef(null);
+  const chunksRef = useRef([]);
+  const pointerActiveRef = useRef(false);
+  const lastPointerTypeRef = useRef("mouse");
+
+  useEffect(() => {
+    if (!navigator.mediaDevices || !window.MediaRecorder) {
+      setHasMic(false);
+      setError("Tu navegador no soporta grabación de audio.");
+    }
+  }, []);
+
+  const startRecording = async () => {
+    try {
+      setError("");
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/ogg";
+      const mr = new MediaRecorder(stream, { mimeType });
+      mediaRecorderRef.current = mr;
+      chunksRef.current = [];
+
+      mr.ondataavailable = (e) => { if (e.data && e.data.size > 0) chunksRef.current.push(e.data); };
+      mr.onstop = async () => {
+        setIsRecording(false);
+        try {
+          const blob = new Blob(chunksRef.current, { type: mimeType });
+          chunksRef.current = [];
+          setSending(true);
+          const { url } = await sendVoice(blob);
+          new Audio(url).play().catch(() => {});
+        } catch (err) {
+          setError(err?.message || "No se pudo enviar el audio.");
+        } finally {
+          setSending(false);
+        }
+        try { mr.stream.getTracks().forEach(t => t.stop()); } catch {}
+        mediaRecorderRef.current = null;
+      };
+
+      mr.start();
+      setIsRecording(true);
+    } catch {
+      setHasMic(false);
+      setError("No se pudo acceder al micrófono.");
+    }
+  };
+
+  const stopRecording = () => {
+    const mr = mediaRecorderRef.current;
+    if (mr && mr.state !== "inactive") mr.stop();
+    else { setIsRecording(false); mediaRecorderRef.current = null; }
+  };
+
+  // touch/pen = press-and-hold ; mouse = click-toggle
+  const handlePointerDown = (e) => {
+    lastPointerTypeRef.current = e.pointerType || "mouse";
+    if (lastPointerTypeRef.current !== "mouse") {
+      if (sending || isRecording) return;
+      pointerActiveRef.current = true;
+      startRecording();
+    }
+  };
+  const handlePointerUp = () => {
+    if (pointerActiveRef.current) {
+      pointerActiveRef.current = false;
+      if (isRecording) stopRecording();
+    }
+  };
+  const handleClick = async (e) => {
+    if (pointerActiveRef.current || lastPointerTypeRef.current !== "mouse") {
+      e.preventDefault();
+      return;
+    }
+    if (sending) return;
+    if (!isRecording) await startRecording(); else stopRecording();
+  };
+
+  return (
+    <>
+      <button
+        className={`micBtn ${isRecording ? "micBtn--rec" : ""}`}
+        onClick={handleClick}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        title={isRecording ? "Detener y enviar" : "Grabar mensaje de voz"}
+        disabled={!hasMic || sending}
+        aria-pressed={isRecording}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
+          <path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2Z"/>
+        </svg>
+        <span className="micLabel">{sending ? "Enviando…" : isRecording ? "Grabando…" : "Hablar"}</span>
+      </button>
+
+      {!hasMic && <div className="voiceWarn">Micrófono no disponible.</div>}
+      {error && <div className="voiceErr">⚠️ {error}</div>}
+    </>
+  );
+}
+
+
+
 /* ======================= Página ======================= */
 export default function ChatDashboard() {
   const [loading, setLoading] = useState(true);
@@ -307,7 +408,7 @@ export default function ChatDashboard() {
         // 1) Balance predictions
         const r1 = await fetch("/api/users/cust_001/predictions/balance");
         if (!r1.ok) throw new Error(`Balance HTTP ${r1.status}`);
-        const balanceJson = await r1.json(); // array [{ ds, yhat, ... }, ...]
+        const balanceJson = await r1.json();
         const sorted = [...balanceJson]
           .filter(d => d?.ds && typeof d?.yhat === "number")
           .sort((a, b) => new Date(a.ds) - new Date(b.ds));
@@ -328,9 +429,9 @@ export default function ChatDashboard() {
         // 2) Category predictions
         const r2 = await fetch("/api/users/cust_001/predictions/category");
         if (!r2.ok) throw new Error(`Category HTTP ${r2.status}`);
-        const catJson = await r2.json(); // array
-        // Tomar el conjunto más reciente por (year, month) usando created_at
-        const byKey = new Map(); // key = `${year}-${month}`
+        const catJson = await r2.json();
+
+        const byKey = new Map();
         for (const row of catJson) {
           const key = `${row.year}-${String(row.month).padStart(2, "0")}`;
           const prev = byKey.get(key);
@@ -338,16 +439,14 @@ export default function ChatDashboard() {
             byKey.set(key, { created_at: row.created_at });
           }
         }
-        // último año-mes por fecha de creación más reciente global
+
         const latestCreated = [...byKey.values()].reduce((acc, cur) => {
           if (!acc) return cur;
           return new Date(cur.created_at) > new Date(acc.created_at) ? cur : acc;
         }, null);
 
-        // si no se puede, usamos el año-mes máximo
         let yearMonthToUse = null;
         if (latestCreated) {
-          // encontrar el (year, month) correspondiente al created_at más reciente
           let bestYM = null;
           let bestDate = null;
           for (const row of catJson) {
@@ -387,7 +486,6 @@ export default function ChatDashboard() {
     fetchAll();
   }, []);
 
-  // Tomar últimos 30 puntos para la sparkline (si hay muchos)
   const last30 = useMemo(() => {
     const n = balanceSeries.length;
     return n > 30 ? balanceSeries.slice(n - 30) : balanceSeries;
@@ -395,7 +493,6 @@ export default function ChatDashboard() {
 
   return (
     <div className="dash">
-      {/* CSS mínimo: grid 3×2 a la izquierda + chat a la derecha + compact cards */}
       <style>{`
         .dash__top{
           display: grid;
@@ -405,7 +502,7 @@ export default function ChatDashboard() {
         }
         .dash__left{
           display: grid;
-          grid-template-columns: repeat(3, minmax(260px, 1fr)); /* 3 columnas */
+          grid-template-columns: repeat(3, minmax(260px, 1fr));
           gap: 16px;
           align-content: start;
         }
@@ -417,7 +514,6 @@ export default function ChatDashboard() {
           gap:8px;
         }
         .card--compact .stat__amount--center{
-          /* este valor ahora lo sobrescribe .stat__amount--big */
           font-size: clamp(1rem, 1.8vw, 1.15rem);
           margin: 2px 0 6px;
         }
@@ -432,20 +528,81 @@ export default function ChatDashboard() {
           font-size: .9rem; color:#64748B;
         }
 
-        /* === Nuevos estilos de énfasis y tamaños grandes === */
+        /* === Énfasis y tamaños === */
         .card--emph{ padding: 16px 18px; }
-
         .stat__amount--big{
           font-size: clamp(1.6rem, 2.8vw, 2.2rem);
           font-weight: 900;
           line-height: 1.05;
           margin: 6px 0 10px;
         }
-
         .score__number--big{
           font-size: clamp(1.15rem, 2.1vw, 1.5rem);
           font-weight: 900;
         }
+
+        /* === Predicted Total Balance estilo === */
+        .card--accent{ background: linear-gradient(180deg,#f8fafc 0%, #ffffff 70%); }
+        .stat__head{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .stat__title--bold{ font-size:.98rem; font-weight:800; white-space:nowrap; }
+        .badge-pill{
+          font-weight:800; font-size:.9rem; padding:4px 10px; border-radius:999px;
+          background:#eef2ff; color:#1d4ed8;
+        }
+        .pill--up{ background:#ecfdf5; color:#16a34a; }
+        .pill--down{ background:#fef2f2; color:#dc2626; }
+        .stat__amount--xl{
+          display:flex; align-items:flex-end; gap:8px; flex-wrap:wrap;
+          margin: 6px 0 10px;
+        }
+        .stat__currency{
+          font-size: clamp(.9rem, 1.2vw, 1rem);
+          color:#64748B; font-weight:700; letter-spacing:.2px;
+        }
+        .stat__value{
+          font-size: clamp(1.9rem, 3vw, 2.4rem);
+          font-weight: 900; line-height:1.05;
+        }
+        .soft-sep{ height:1px; background:#e2e8f0; margin:6px 0 2px; }
+        .stat__foot--stack{
+          display:grid; grid-template-columns:auto 1fr; row-gap:6px; column-gap:10px; align-items:center;
+        }
+        .kpiCell{ display:flex; align-items:center; gap:8px; }
+        .kpiDot{ width:8px; height:8px; border-radius:999px; display:inline-block; }
+        .kpiDot--up{ background:#16a34a; }
+        .kpiDot--down{ background:#dc2626; }
+
+        /* === Mic button === */
+        .chat-card{ position: relative; }
+        .micBtn{
+          position:absolute; right:12px; bottom:12px;
+          display:flex; align-items:center; gap:8px;
+          background:#111827; color:#fff; border:none;
+          padding:10px 12px; border-radius:999px;
+          font-weight:700; box-shadow: 0 8px 20px rgba(0,0,0,.18);
+          cursor:pointer;
+        }
+        .micBtn:disabled{ opacity:.6; cursor:not-allowed; }
+        .micBtn--rec{ background:#dc2626; }
+        .micLabel{ font-size:.92rem; }
+        .pulse{
+          position:absolute; inset:auto; right:-6px; bottom:-6px;
+          width:14px; height:14px; border-radius:999px;
+          background:rgba(34,197,94,.35);
+          animation: pulse 1.4s infinite ease-out;
+          opacity: 0;
+        }
+        .micBtn--rec .pulse{ opacity: 1; }
+        @keyframes pulse{
+          0% { transform: scale(.6); opacity:.9; }
+          100%{ transform: scale(1.6); opacity:0; }
+        }
+        .voiceWarn, .voiceErr{
+          position:absolute; left:12px; right:12px; bottom:12px;
+          background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:8px 10px;
+          color:#111827; font-size:.9rem; box-shadow: 0 8px 20px rgba(0,0,0,.08);
+        }
+        .voiceErr{ border-color:#fecaca; background:#fff1f2; }
 
         @media (max-width: 1200px){
           .dash__top{ grid-template-columns: 1fr; }
@@ -467,11 +624,12 @@ export default function ChatDashboard() {
             <UpcomingBillsCard />
           </div>
 
-          {/* DERECHA: Chat */}
+          {/* DERECHA: Chat + botón de voz */}
           <div className="chat-card">
             {loading && <div className="muted">Cargando predicciones…</div>}
             {error && <div className="error">Error: {error}</div>}
             <Chat />
+            <VoiceRecorderButton />
           </div>
         </section>
       </div>

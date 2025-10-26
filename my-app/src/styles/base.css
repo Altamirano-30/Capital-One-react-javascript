@@ -1924,3 +1924,62 @@ img, svg, video { display: block; }
 .kpiDot--down{ background:#DC2626; }
 .kpi__label{ color:#475569; white-space:nowrap; }
 .kpi__value{ font-weight:800; }
+
+/* --- Chat: mic alineado con el input/enviar --- */
+.chat-card{ position: relative; }
+
+/* botón mic "en línea" con la barra de composición */
+.micBtn{
+  position:absolute;
+  /* ajusta estos 2 valores si tu input cambia de tamaño */
+  right: 120px;         /* deja espacio a la derecha para el botón Enviar */
+  bottom: 22px;         /* iguala la línea base del input */
+  height: 44px;         /* ≈ alto de tu input */
+  display:flex; align-items:center; gap:8px;
+  border:none; cursor:pointer;
+  background:#111827; color:#fff;
+  padding:0 14px; border-radius:12px;
+  font-weight:700; font-size:.92rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,.18);
+}
+.micBtn:disabled{ opacity:.6; cursor:not-allowed; }
+.micBtn--rec{ background:#dc2626; }
+.micBtn .pulse{ display:none; } /* en modo inline ocultamos el pulso */
+
+/* --- Predicted Total Balance: pulido visual --- */
+.card--accent{ background: linear-gradient(180deg,#f8fafc 0%, #ffffff 70%); }
+.stat__head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; }
+.stat__title--bold{ font-size:1rem; font-weight:800; white-space:nowrap; }
+.badge-pill{
+  font-weight:800; font-size:.9rem; padding:4px 10px; border-radius:999px;
+  background:#ecfdf5; color:#16a34a;
+}
+.pill--down{ background:#fef2f2; color:#dc2626; }
+
+.stat__amount--xl{
+  display:flex; align-items:flex-end; gap:8px; flex-wrap:wrap;
+  margin: 6px 0 8px;
+}
+.stat__currency{
+  font-size: .95rem;
+  color:#64748B; font-weight:700; letter-spacing:.2px;
+}
+.stat__value{
+  font-size: clamp(2rem, 3.2vw, 2.6rem);
+  font-weight: 900; line-height:1.05;
+}
+.soft-sep{ height:1px; background:#e2e8f0; margin:6px 0 2px; }
+
+.stat__foot--stack{
+  display:grid; grid-template-columns:auto 1fr; row-gap:6px; column-gap:10px; align-items:center;
+}
+.kpiCell{ display:flex; align-items:center; gap:8px; }
+.kpiDot{ width:8px; height:8px; border-radius:999px; display:inline-block; }
+.kpiDot--up{ background:#16a34a; }
+.kpiDot--down{ background:#dc2626; }
+
+/* --- Gráfica: alto consistente --- */
+.statsCard .chart-frame{
+  padding: 8px 0 0;
+  height: 160px;               /* contenedor alto fijo */
+}
