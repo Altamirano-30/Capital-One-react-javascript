@@ -12,18 +12,15 @@ export default defineConfig({
         secure: false,
         rewrite: (p) => p.replace(/^\/api/, '')
       },
-      // 🔹 Tu servidor local RAG/Ollama
+
+      // ✅ 🔹 Tu backend local FastAPI
+      // Mapea /ask → /api/text-chat
       '/ask': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:8000',
         changeOrigin: true,
-        secure: false
-      },
-      // (opcional) si usaras el alias /chat
-      // '/chat': {
-      //   target: 'http://localhost:3001',
-      //   changeOrigin: true,
-      //   secure: false
-      // }
+        secure: false,
+        rewrite: (p) => p.replace(/^\/ask/, '/api/text-chat')
+      }
     }
   }
 })
