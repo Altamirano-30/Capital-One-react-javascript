@@ -1,5 +1,5 @@
 import "../styles/animations.css";
-import Sidebar from "../components/Sidebar";
+import SidebarTwin from "../components/SidebarTwin";
 
 import { useState, useEffect } from "react";
 
@@ -14,13 +14,13 @@ export default function Twin() {
 
   return (
     <div className="dash">
-      <Sidebar />
+      <SidebarTwin />
 
       {/* Animación a pantalla completa */}
       {animating && (
         <div transition-style="full:cinematic">
-          <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Twin Model</h1>
-          <p>Bienvenido a la página de TwinModel.</p>
+          <h1 style={{ fontSize: "4rem", marginBottom: "1rem" }}>TWIN MODEL</h1>
+          
         </div>
       )}
 

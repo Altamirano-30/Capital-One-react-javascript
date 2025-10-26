@@ -1,0 +1,86 @@
+/* === NUEVA SLIDEBAR (estilo igual al original, pero blanco con borde negro) === */
+.sidebar--white {
+  background: #ffffff;
+  color: #000000;
+  border-radius: 8px;
+  padding: var(--space-5) var(--space-4);
+  min-height: calc(100vh - 2 * var(--space-4));
+  position: sticky;
+  top: var(--space-4);
+  box-shadow: var(--shadow);
+}
+
+/* Perfil dentro de la sidebar blanca */
+.sidebar--white .sidebar__profile {
+  display: grid;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+}
+
+.sidebar--white .avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f3f4f6;
+}
+
+/* Lista de navegación */
+.sidebar--white .sidebar__nav {
+  display: grid;
+  gap: 10px;
+}
+
+/* Ítems: igual tamaño y padding que los originales */
+.sidebar--white .nav__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #000000;
+  background: #ffffff;
+  border: 1.5px solid #000000;
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-weight: 500;
+  transition: 0.25s ease;
+}
+
+/* Hover */
+.sidebar--white .nav__item:hover {
+  background: #f4f4f4;
+  transform: translateY(-1px);
+}
+
+/* Ícono */
+.sidebar--white .nav__icon-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: none;
+}
+
+/* Etiqueta */
+.sidebar--white .nav__label {
+  font-size: 16px;
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* Activo */
+.sidebar--white .nav__item--active {
+  background: #000000;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.sidebar--white .nav__item--active .nav__icon-img {
+  filter: brightness(0) invert(1);
+}
+
+/* Separador */
+.sidebar--white .sidebar__rule {
+  width: 100%;
+  height: 1.5px;
+  background: rgba(0, 0, 0, 0.20);
+  margin: 14px 0 22px;
+  border-radius: 1px;
+}

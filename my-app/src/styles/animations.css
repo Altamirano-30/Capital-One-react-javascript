@@ -2,17 +2,17 @@
 @keyframes cinematic-transition {
   0% {
     clip-path: inset(0 0 0 0);
-    background-color: #113f63; /* color inicial oscuro */
+    background-color: #631111; /* color inicial oscuro */
     color: #ffffff;
   }
   30% {
     clip-path: inset(10% 0 10% 0);
-    background-color: #0d5687;
+    background-color: #870d0d;
     color: #e0e0e0;
   }
   70% {
     clip-path: inset(50% 0 50% 0);
-    background-color: #1375a4;
+    background-color: #a41313;
     color: #f3f3f3;
   }
   100% {
