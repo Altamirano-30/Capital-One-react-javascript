@@ -1777,3 +1777,150 @@ img, svg, video { display: block; }
 }
 
 
+/* ===== Compact Cards ===== */
+.card--compact{
+  padding: 12px 14px;
+  min-height: 140px;       /* ⬅️ baja altura */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card--compact .stat__amount--center{
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  margin: 2px 0 6px;
+}
+
+.card--compact .badge-circle .ring{ display:none; } /* badge más limpio y corto */
+.card--compact .bullets{ line-height: 1.5; }
+
+/* Ajustes del grid para que no quede hueco visual */
+.dash__left{
+  align-content: start; /* alinea filas arriba */
+}
+
+/* énfasis común para ambas cards */
+.card--emph{
+  padding: 16px 18px;
+}
+
+/* balance grande */
+.stat__amount--big{
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem); /* ⬅️ bien visible en 3 columnas */
+  font-weight: 900;
+  line-height: 1.05;
+  margin: 6px 0 10px;
+}
+
+/* financial score grande */
+.score__number--big{
+  font-size: clamp(1.15rem, 2.1vw, 1.5rem);
+  font-weight: 900;
+}
+
+/* La card puede crecer y el pie se pega abajo */
+.card--emph{
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pie en grid de dos columnas: info a la izq, valor a la der */
+.stat__foot--stack{
+  margin-top: auto;                  /* empuja el bloque al fondo de la card */
+  display: grid;
+  grid-template-columns: 1fr auto;   /* label ocupa todo, valor a la derecha */
+  row-gap: 10px;
+  column-gap: 8px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+/* Celda izquierda: puntito + texto alineados */
+.kpiCell{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.kpi__label{
+  color: #475569;        /* slate-600 */
+  white-space: nowrap;
+}
+
+.kpi__value{
+  font-weight: 800;
+}
+
+/* puntitos de color */
+.kpi__dot{ 
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.kpi__dot--up{   background: #16A34A; }  /* verde */
+.kpi__dot--down{ background: #DC2626; }  /* rojo */
+
+/* ——— Predicted Balance: look & feel ——— */
+.card--accent{
+  position: relative;
+  overflow: hidden;
+}
+/* barrita superior con degradado sutil */
+.card--accent::before{
+  content:"";
+  position:absolute; inset:0 0 auto 0;
+  height:3px;
+  background: linear-gradient(90deg, #2563eb 0%, #60a5fa 40%, #22c55e 100%);
+  opacity:.9;
+}
+
+/* head compacto */
+.stat__head--tight{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin-bottom:6px;
+}
+.stat__title--bold{ font-weight:900; letter-spacing:.2px; }
+
+/* pill de variación */
+.badge-pill{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 10px; border-radius:999px; font-weight:800; font-size:.9rem;
+  line-height:1; background:#eef2ff; color:#1f2937;  /* base */
+}
+.pill--up{ background:#ECFDF5; color:#16A34A; }
+.pill--down{ background:#FEF2F2; color:#DC2626; }
+
+/* cantidad XL */
+.stat__amount--xl{
+  display:flex; align-items:baseline; gap:8px;
+  margin: 6px 0 10px;
+}
+.stat__currency{
+  font-size: clamp(.95rem, 1.4vw, 1.05rem);
+  font-weight:800; color:#334155; letter-spacing:.6px;
+}
+.stat__value{
+  font-size: clamp(2.1rem, 3.6vw, 2.8rem);   /* 👈 grande y responsive */
+  font-weight: 900; line-height:1.05;
+}
+
+/* separador suave */
+.soft-sep{
+  height:1px; background: linear-gradient(90deg, transparent, #e5e7eb 40%, #e5e7eb 60%, transparent);
+  margin:6px 0 8px;
+}
+
+/* KPIs apilados (ya tenías base; reforzamos) */
+.stat__foot--stack{
+  margin-top:auto;
+  display:grid;
+  grid-template-columns:1fr auto;
+  row-gap:10px; column-gap:8px; align-items:center;
+  font-size:.92rem;
+}
+.kpiCell{ display:inline-flex; align-items:center; gap:8px; min-width:0; }
+.kpiDot{ width:10px; height:10px; border-radius:50%; }
+.kpiDot--up{ background:#16A34A; }
+.kpiDot--down{ background:#DC2626; }
+.kpi__label{ color:#475569; white-space:nowrap; }
+.kpi__value{ font-weight:800; }
