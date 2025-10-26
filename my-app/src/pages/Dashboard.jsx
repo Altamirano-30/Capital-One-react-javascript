@@ -13,48 +13,83 @@ export default function Dashboard() {
     balance: 0,
     income: 0,
     expenses: 0,
+    percent: 0,
   });
+  const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  const fetchBalance = async () => {
-    try {
-      const res = await fetch("/api/users/cust_001/balance_history");
-      const data = await res.json();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // --- Balance history ---
+        const resBalance = await fetch("/api/users/cust_001/balance_history");
+        const balanceHistory = await resBalance.json();
 
-      console.log("DATA DEL ENDPOINT:", data); // Para ver cómo llega
+        const history = Array.isArray(balanceHistory)
+          ? balanceHistory
+          : balanceHistory.balance_history || [];
 
-      const history = Array.isArray(data) ? data : data.balance_history || [];
+        if (history.length > 0) {
+          const sortedHistory = history.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
 
-      if (history.length > 0) {
-        // Ordenamos por fecha descendente y tomamos el registro más reciente
-        const sortedHistory = history.sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
+          const latestRecord = sortedHistory[0];
+          const previousRecord = sortedHistory[1] || latestRecord;
+
+          const balanceChangePercent =
+            previousRecord.balance !== 0
+              ? ((latestRecord.balance - previousRecord.balance) / previousRecord.balance) * 100
+              : 0;
+
+          setBalanceData({
+            balance: Number(latestRecord.balance) || 0,
+            income: Number(latestRecord.daily_inflow) || 0,
+            expenses: Number(latestRecord.daily_outflow) || 0,
+            percent: balanceChangePercent.toFixed(2),
+          });
+        }
+
+        // --- Transactions ---
+        const resTransactions = await fetch("/api/users/cust_001/transactions");
+        const transactionsData = await resTransactions.json();
+
+        // Filtrar transacciones reales (descartar las "synthetic" o "test")
+        const filtered = transactionsData.filter(
+          (t) =>
+            t.merchant_name &&
+            !t.merchant_name.toLowerCase().includes("synthetic")
         );
 
-        const latestRecord = sortedHistory[0];
+        // Mapear al formato necesario
+        const mappedTransactions = filtered.slice(0, 5).map((t) => {
+          const name = t.merchant_name || t.description;
+          const amountValue = Number(t.amount) || 0;
 
-        console.log("Registro más reciente:", latestRecord);
+          // Formatear categoría (tag)
+          let tag = t.category || t.type || "Other";
+          tag = tag.split("_")[0]; // tomar antes del guion bajo
+          tag = tag.charAt(0).toUpperCase() + tag.slice(1); // primera mayúscula
 
-        setBalanceData({
-          balance: Number(latestRecord.balance) || 0,
-          income: Number(latestRecord.daily_inflow) || 0,
-          expenses: Number(latestRecord.daily_outflow) || 0,
+          return {
+            icon: name.charAt(0).toUpperCase(),
+            name: name,
+            tag: tag,
+            amount: `${amountValue < 0 ? '-' : '+'}${Math.abs(amountValue).toLocaleString("en-US", { style: 'currency', currency: 'USD' })}`,
+            positive: amountValue > 0,
+          };
         });
-      } else {
-        console.warn("No hay registros en balance_history");
+
+        setTransactions(mappedTransactions);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setLoading(false);
       }
+    };
 
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching balance:", err);
-      setLoading(false);
-    }
-  };
-
-  fetchBalance();
-}, []);
-
+    fetchData();
+  }, []);
 
   return (
     <div className="dash">
@@ -72,7 +107,7 @@ useEffect(() => {
                     ? "Cargando..."
                     : `USD ${balanceData.balance.toLocaleString("en-US")}`
                 }
-                percent="2.36 %"
+                percent={`${balanceData.percent || 0} %`}
                 income={
                   loading
                     ? "Cargando..."
@@ -88,7 +123,7 @@ useEffect(() => {
               <StatCard
                 variant="savings"
                 title="Total Savings"
-                amount="USD 5,000.00"
+                amount="USD 5,214.72"
                 percent="2.36 %"
                 sparkData={[1, 2, 3, 5, 8, 13, 21]}
               />
@@ -97,7 +132,7 @@ useEffect(() => {
             <StatisticsCard />
           </div>
 
-          <TransactionsPanel />
+          <TransactionsPanel transactions={transactions} />
         </section>
 
         <section className="dash__bottom">
