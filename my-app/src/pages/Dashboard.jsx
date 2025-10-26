@@ -2,168 +2,96 @@
 import { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Sidebar from "../components/Sidebar";
-import Chat from "./Chat";
+import StatCard from "../components/StatCard";
+import TransactionsPanel from "../components/TransactionsPanel";
+import StatisticsCard from "../components/StatisticsCard";
+import GoalsCard from "../components/GoalsCard";
+import GoalIcon from "../assets/goal-sign.svg";
+import SpendingOverview from "../components/SpendingOverview";
+import QuickTransfer from "../components/QuickTransfer";
 
-/* =========================
-   Helpers SVG (Financial Score)
-   ========================= */
-function polarToCartesian(cx, cy, r, angleDeg) {
-  const angleRad = ((angleDeg - 90) * Math.PI) / 180.0;
-  return { x: cx + r * Math.cos(angleRad), y: cy + r * Math.sin(angleRad) };
-}
-function describeArc(cx, cy, r, startAngle, endAngle) {
-  const start = polarToCartesian(cx, cy, r, endAngle);
-  const end = polarToCartesian(cx, cy, r, startAngle);
-  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-  return ["M", start.x, start.y, "A", r, r, 0, largeArcFlag, 0, end.x, end.y].join(" ");
-}
+export default function Dashboard() {
+  const [balanceData, setBalanceData] = useState({
+    balance: 0,
+    income: 0,
+    expenses: 0,
+    percent: 0,
+  });
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-/* =========================
-   Paneles (placeholders con animación)
-   ========================= */
-
-const cardVariant = {
-  hidden: { opacity: 0, y: 18, scale: 0.98 },
-  show:   { opacity: 1, y: 0,  scale: 1, transition: { type: "spring", stiffness: 120, damping: 16 } }
-};
-const listVariant = { show: { transition: { staggerChildren: 0.08 } } };
-
-function PredictedBalanceCard() {
-  const amount = 0;
-  const percent = 0;
-
-  return (
-    <motion.div className="card fm-card" variants={cardVariant}>
-      <h3 style={{ marginBottom: 4 }}>Total Balance</h3>
-      <div style={{ fontSize: 22, fontWeight: 700 }}>
-        USD {amount.toLocaleString("en-US", { minimumFractionDigits: 2 })}
-      </div>
-      <div style={{ color: percent >= 0 ? "#16a34a" : "#dc2626" }}>
-        {percent >= 0 ? "+" : ""}
-        {percent.toFixed(2)}%
-      </div>
-    </motion.div>
-  );
-}
-
-function FinancialScoreCard() {
-  const score = 0; // 0–100
-  const size = 140;
-  const stroke = 12;
-  const radius = (size - stroke) / 2;
-  const clamped = Math.max(0, Math.min(100, score));
-  const arcD = useMemo(
-    () => describeArc(size / 2, size / 2, radius, 180, 180 + (clamped / 100) * 180),
-    [clamped, size, radius]
-  );
-
-  return (
-    <motion.div className="card fm-card" variants={cardVariant}>
-      <h3 style={{ marginBottom: 4 }}>Financial Score</h3>
-      <div style={{ display: "grid", placeItems: "center" }}>
-        <svg width={size} height={size / 2} viewBox={`0 0 ${size} ${size / 2}`}>
-          <path
-            d={describeArc(size / 2, size / 2, radius, 180, 360)}
-            fill="none"
-            stroke="#e2e8f0"
-            strokeWidth={stroke}
-            strokeLinecap="round"
-          />
-          <motion.path
-            d={arcD}
-            fill="none"
-            stroke="#2563eb"
-            strokeWidth={stroke}
-            strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: clamped / 100 }}
-            transition={{ type: "spring", duration: 1.2 }}
-          />
-        </svg>
-        <motion.div
-          style={{ marginTop: 6, fontWeight: 700 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          {clamped} / 100
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-}
-
-function PredictedBalanceChart() {
-  return (
-    <motion.div className="card fm-card" style={{ paddingBottom: 16 }} variants={cardVariant}>
-      <h3 style={{ marginBottom: 10 }}>Balance Forecast</h3>
-
-      {/* Contenedor arreglado: sin desbordes, shimmer interno */}
-      <div className="chart-frame">
-        <div className="chart-skeleton">
-          <span>(Chart here)</span>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function GoalsPredicted() {
-  return (
-    <motion.div className="card fm-card" variants={cardVariant}>
-      <h3 style={{ marginBottom: 8 }}>Goals (Predicted)</h3>
-      <ul style={{ paddingLeft: 18, lineHeight: 1.8 }}>
-        <li>Meta 1 (predicción)…</li>
-        <li>Meta 2 (predicción)…</li>
-        <li>Meta 3 (predicción)…</li>
-      </ul>
-    </motion.div>
-  );
-}
-
-function SpendingPredictionByCategory() {
-  return (
-    <motion.div className="card fm-card" variants={cardVariant}>
-      <h3 style={{ marginBottom: 8 }}>Predicted Spending by Category</h3>
-      <div className="chart-frame" style={{ height: 200 }}>
-        <div className="chart-skeleton">
-          <span>(Donut/Bars here)</span>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-/* =========================
-   Toggle de inversión de colores
-   ========================= */
-function ThemeInvertToggle({ on }) {
-  return (
-    <button
-      aria-label="Invert colors"
-      title="Invert colors"
-      className="invert-btn"
-      onClick={on}
-    >
-      ⟳ Invert
-    </button>
-  );
-}
-
-/* =========================
-   Página (misma distribución)
-   ========================= */
-export default function ChatDashboard() {
-  const [invert, setInvert] = useState(false);
-
-  // opcional: recordar preferencia
   useEffect(() => {
-    const saved = localStorage.getItem("invertColors");
-    if (saved === "1") setInvert(true);
+    const fetchData = async () => {
+      try {
+        // --- Balance history ---
+        const resBalance = await fetch("/api/users/cust_001/balance_history");
+        const balanceHistory = await resBalance.json();
+
+        const history = Array.isArray(balanceHistory)
+          ? balanceHistory
+          : balanceHistory.balance_history || [];
+
+        if (history.length > 0) {
+          const sortedHistory = history.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+
+          const latestRecord = sortedHistory[0];
+          const previousRecord = sortedHistory[1] || latestRecord;
+
+          const balanceChangePercent =
+            previousRecord.balance !== 0
+              ? ((latestRecord.balance - previousRecord.balance) / previousRecord.balance) * 100
+              : 0;
+
+          setBalanceData({
+            balance: Number(latestRecord.balance) || 0,
+            income: Number(latestRecord.daily_inflow) || 0,
+            expenses: Number(latestRecord.daily_outflow) || 0,
+            percent: balanceChangePercent.toFixed(2),
+          });
+        }
+
+        // --- Transactions ---
+        const resTransactions = await fetch("/api/users/cust_001/transactions");
+        const transactionsData = await resTransactions.json();
+
+        // Filtrar transacciones reales (descartar las "synthetic" o "test")
+        const filtered = transactionsData.filter(
+          (t) =>
+            t.merchant_name &&
+            !t.merchant_name.toLowerCase().includes("synthetic")
+        );
+
+        // Mapear al formato necesario
+        const mappedTransactions = filtered.slice(0, 5).map((t) => {
+          const name = t.merchant_name || t.description;
+          const amountValue = Number(t.amount) || 0;
+
+          // Formatear categoría (tag)
+          let tag = t.category || t.type || "Other";
+          tag = tag.split("_")[0]; // tomar antes del guion bajo
+          tag = tag.charAt(0).toUpperCase() + tag.slice(1); // primera mayúscula
+
+          return {
+            icon: name.charAt(0).toUpperCase(),
+            name: name,
+            tag: tag,
+            amount: `${amountValue < 0 ? '-' : '+'}${Math.abs(amountValue).toLocaleString("en-US", { style: 'currency', currency: 'USD' })}`,
+            positive: amountValue > 0,
+          };
+        });
+
+        setTransactions(mappedTransactions);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
-  useEffect(() => {
-    localStorage.setItem("invertColors", invert ? "1" : "0");
-  }, [invert]);
 
   return (
     <div className={`dash ${invert ? "theme-invert" : ""}`}>
@@ -186,8 +114,34 @@ export default function ChatDashboard() {
             animate="show"
           >
             <div className="statsRow">
-              <PredictedBalanceCard />
-              <FinancialScoreCard />
+              <StatCard
+                variant="balance"
+                title="Total Balance"
+                amount={
+                  loading
+                    ? "Cargando..."
+                    : `USD ${balanceData.balance.toLocaleString("en-US")}`
+                }
+                percent={`${balanceData.percent || 0} %`}
+                income={
+                  loading
+                    ? "Cargando..."
+                    : `USD ${balanceData.income.toLocaleString("en-US")}`
+                }
+                expenses={
+                  loading
+                    ? "Cargando..."
+                    : `USD ${balanceData.expenses.toLocaleString("en-US")}`
+                }
+              />
+
+              <StatCard
+                variant="savings"
+                title="Total Savings"
+                amount="USD 5,214.72"
+                percent="2.36 %"
+                sparkData={[1, 2, 3, 5, 8, 13, 21]}
+              />
             </div>
 
             <PredictedBalanceChart />
@@ -216,23 +170,21 @@ export default function ChatDashboard() {
           </AnimatePresence>
         </section>
 
-        {/* BOTTOM */}
-        <motion.section
-          className="dash__bottom"
-          variants={listVariant}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-        >
-          <GoalsPredicted />
-          <SpendingPredictionByCategory />
-          <motion.div className="card fm-card" variants={cardVariant}>
-            <h3 style={{ marginBottom: 8 }}>Quick Transfer</h3>
-            <p style={{ color: "#475569" }}>
-              (Aquí puedes renderizar tu <code>QuickTransfer</code>)
-            </p>
-          </motion.div>
-        </motion.section>
+        <section className="dash__bottom">
+          <GoalsCard
+            title="Goals"
+            goalName="Summer Vacation"
+            current={1485}
+            total={2400}
+            icon={GoalIcon}
+            onPrev={() => {}}
+            onNext={() => {}}
+          />
+          <SpendingOverview items={[62, 50, 40, 10]} />
+          <QuickTransfer
+            contacts={["Emiliano Enriquez", "Emiliano Altamirano", "Diego Ferra"]}
+          />
+        </section>
       </div>
     </div>
   );
